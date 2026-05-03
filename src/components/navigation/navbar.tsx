@@ -4,7 +4,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { useTheme } from 'next-themes';
-import { Moon, Sun, ShoppingBag, BookOpen, Heart, Sparkles } from 'lucide-react';
+import { Moon, Sun, ShoppingBag, BookOpen, Heart, Sparkles, Flower } from 'lucide-react';
 import { usePouch } from '@/components/pouch-context';
 import { PouchDrawer } from '@/components/pouch/pouch-drawer';
 import { Button } from '@/components/ui/button';
@@ -19,12 +19,12 @@ export const Navbar: React.FC = () => {
       <header className="sticky top-0 z-40 w-full bg-background/80 backdrop-blur-md border-b border-border/50 transition-colors">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity group">
-            <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 border border-primary/20 shadow-sm">
-              <BraceletIcon className="w-5 h-5 text-primary" />
+            <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 border border-primary/20 shadow-sm group-hover:rotate-12 transition-transform duration-500">
+              <Flower className="w-5 h-5 text-primary" />
             </div>
             <div className="flex items-center gap-1.5">
               <span className="font-headline text-2xl tracking-tight">Niki's Charms</span>
-              <Heart className="h-4 w-4 text-primary fill-primary group-hover:scale-125 transition-transform duration-300" />
+              <Heart className="h-4 w-4 text-primary fill-primary group-hover:scale-125 transition-transform duration-300 animate-pulse" />
             </div>
           </Link>
 
@@ -96,25 +96,3 @@ export const Navbar: React.FC = () => {
     </>
   );
 };
-
-const BraceletIcon = (props: React.SVGProps<SVGSVGElement>) => (
-  <svg
-    {...props}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <circle cx="12" cy="12" r="9" />
-    <circle cx="12" cy="3" r="1.5" fill="currentColor" />
-    <circle cx="12" cy="21" r="1.5" fill="currentColor" />
-    <circle cx="3" cy="12" r="1.5" fill="currentColor" />
-    <circle cx="21" cy="12" r="1.5" fill="currentColor" />
-    <circle cx="5.5" cy="5.5" r="1" fill="currentColor" />
-    <circle cx="18.5" cy="5.5" r="1" fill="currentColor" />
-    <circle cx="5.5" cy="18.5" r="1" fill="currentColor" />
-    <circle cx="18.5" cy="18.5" r="1" fill="currentColor" />
-  </svg>
-);
