@@ -21,8 +21,8 @@ export const Navbar: React.FC = () => {
     <>
       <header className="sticky top-0 z-40 w-full bg-background/80 backdrop-blur-md border-b border-border/50 transition-colors">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
-            <div className="relative w-8 h-8 rounded-full overflow-hidden border border-primary/20">
+          <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity group">
+            <div className="relative w-8 h-8 rounded-full overflow-hidden border border-primary/20 shadow-sm">
               {logo && (
                 <Image 
                   src={logo.imageUrl} 
@@ -33,7 +33,10 @@ export const Navbar: React.FC = () => {
                 />
               )}
             </div>
-            <span className="font-headline text-2xl tracking-tight">Niki's Charms</span>
+            <div className="flex items-center gap-1.5">
+              <span className="font-headline text-2xl tracking-tight">Niki's Charms</span>
+              <Heart className="h-4 w-4 text-primary fill-primary group-hover:scale-125 transition-transform duration-300" />
+            </div>
           </Link>
 
           {/* Desktop Nav */}
