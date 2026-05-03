@@ -1,25 +1,38 @@
+
 "use client"
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useTheme } from 'next-themes';
 import { Moon, Sun, ShoppingBag, BookOpen, Heart, Sparkles } from 'lucide-react';
 import { usePouch } from '@/components/pouch-context';
 import { PouchDrawer } from '@/components/pouch/pouch-drawer';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 export const Navbar: React.FC = () => {
   const { theme, setTheme } = useTheme();
   const { itemCount } = usePouch();
   const [isPouchOpen, setIsPouchOpen] = React.useState(false);
+  const logo = PlaceHolderImages.find(img => img.id === 'brand-logo');
 
   return (
     <>
       <header className="sticky top-0 z-40 w-full bg-background/80 backdrop-blur-md border-b border-border/50 transition-colors">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-            <Heart className="text-primary w-5 h-5 animate-pulse" />
+          <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+            <div className="relative w-8 h-8 rounded-full overflow-hidden border border-primary/20">
+              {logo && (
+                <Image 
+                  src={logo.imageUrl} 
+                  alt="Niki's Charms" 
+                  fill 
+                  className="object-cover"
+                  data-ai-hint={logo.imageHint}
+                />
+              )}
+            </div>
             <span className="font-headline text-2xl tracking-tight">Niki's Charms</span>
           </Link>
 

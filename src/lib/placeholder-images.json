@@ -1,3 +1,10 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "brand-logo",
+      "description": "Niki's Charms Brand Logo",
+      "imageUrl": "https://picsum.photos/seed/nikis-logo/200/200",
+      "imageHint": "watercolor logo"
+    }
+  ]
 }

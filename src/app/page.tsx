@@ -1,3 +1,4 @@
+
 "use client"
 
 import React from 'react';
@@ -10,6 +11,7 @@ import { Star, Moon, ArrowRight, Instagram, Heart } from 'lucide-react';
 
 export default function Home() {
   const bestsellers = PRODUCTS.filter(p => p.isBestseller);
+  const instagramUrl = "https://www.instagram.com/nikis_charms/";
 
   return (
     <div className="relative overflow-hidden">
@@ -109,14 +111,27 @@ export default function Home() {
       {/* Instagram Grid (Static Mock) */}
       <section className="py-20 container mx-auto px-4">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-headline mb-4 flex items-center justify-center gap-2">
-            <Instagram className="w-6 h-6" /> From our community
-          </h2>
-          <p className="text-muted-foreground font-accent text-xl">Tag #NikisCharms to be featured 📸</p>
+          <a 
+            href={instagramUrl} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="inline-block group"
+          >
+            <h2 className="text-3xl font-headline mb-4 flex items-center justify-center gap-2 group-hover:text-primary transition-colors">
+              <Instagram className="w-6 h-6" /> From our community
+            </h2>
+            <p className="text-muted-foreground font-accent text-xl">Tag #NikisCharms to be featured 📸</p>
+          </a>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {[1, 2, 3, 4].map(i => (
-            <div key={i} className="aspect-square relative rounded-xl overflow-hidden group cursor-pointer border border-border/50">
+            <a 
+              key={i} 
+              href={instagramUrl} 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="aspect-square relative rounded-xl overflow-hidden group cursor-pointer border border-border/50"
+            >
               <Image
                 src={`https://picsum.photos/seed/insta${i}/600/600`}
                 alt="Instagram post"
@@ -126,7 +141,7 @@ export default function Home() {
               <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                 <Heart className="text-white fill-white w-8 h-8" />
               </div>
-            </div>
+            </a>
           ))}
         </div>
       </section>
@@ -143,7 +158,9 @@ export default function Home() {
           <div className="flex items-center justify-center gap-8 text-sm font-medium">
             <Link href="/shop" className="hover:text-primary">Shop</Link>
             <Link href="/diary" className="hover:text-primary">Diary</Link>
-            <Link href="#" className="hover:text-primary">Shipping</Link>
+            <a href={instagramUrl} target="_blank" rel="noopener noreferrer" className="hover:text-primary flex items-center gap-1">
+              <Instagram className="w-4 h-4" /> Instagram
+            </a>
             <Link href="#" className="hover:text-primary">Contact</Link>
           </div>
           <div className="pt-8 border-t border-border/30 text-[10px] uppercase tracking-widest text-muted-foreground">
