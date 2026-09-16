@@ -19,10 +19,12 @@ import { Badge } from '@/components/ui/badge';
 import { VexaSidebar } from '@/components/layout/sidebar';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
+import { useSidebar } from '@/components/layout/sidebar-context';
 
 export default function SettingsPage() {
   const { toast } = useToast();
   const [activeLayer, setActiveLayer] = useState<'vexa' | 'vision'>('vexa');
+  const { isCollapsed } = useSidebar();
 
   const handlePreferenceClick = (label: string) => {
     toast({
@@ -50,7 +52,10 @@ export default function SettingsPage() {
     <div className="flex min-h-screen bg-[#09090b]">
       <VexaSidebar />
 
-      <main className="flex-1 lg:ml-64 flex flex-col h-screen overflow-y-auto">
+      <main className={cn(
+        "flex-1 flex flex-col h-screen overflow-y-auto transition-all duration-300 ease-in-out",
+        isCollapsed ? "lg:ml-20" : "lg:ml-64"
+      )}>
         <header className="h-16 border-b border-zinc-800/50 flex items-center justify-between px-8 bg-[#09090b]/80 backdrop-blur-md sticky top-0 z-40 shrink-0">
           <h2 className="text-xl font-bold flex items-center gap-3">
             <Settings className="w-5 h-5 text-primary" /> Workspace Settings

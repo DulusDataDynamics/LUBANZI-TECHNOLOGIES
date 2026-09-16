@@ -1,7 +1,9 @@
+
 import type {Metadata} from 'next';
 import './globals.css';
 import { ThemeProvider } from '@/components/theme-provider';
 import { Toaster } from '@/components/ui/toaster';
+import { SidebarProvider } from '@/components/layout/sidebar-context';
 
 export const metadata: Metadata = {
   title: "VEXA | AI Software Engineering Agent",
@@ -22,8 +24,10 @@ export default function RootLayout({
       </head>
       <body className="font-body bg-[#09090b] text-zinc-100 antialiased selection:bg-primary/30">
         <ThemeProvider attribute="class" defaultTheme="dark" forcedTheme="dark">
-          {children}
-          <Toaster />
+          <SidebarProvider>
+            {children}
+            <Toaster />
+          </SidebarProvider>
         </ThemeProvider>
       </body>
     </html>

@@ -16,9 +16,11 @@ import { INITIAL_PROJECTS } from '@/lib/mock-data';
 import { VexaSidebar } from '@/components/layout/sidebar';
 import { NewProjectDialog } from '@/components/projects/new-project-dialog';
 import { cn } from '@/lib/utils';
+import { useSidebar } from '@/components/layout/sidebar-context';
 
 export default function ProjectsPage() {
   const [searchQuery, setSearchQuery] = useState('');
+  const { isCollapsed } = useSidebar();
 
   const filteredProjects = useMemo(() => {
     return INITIAL_PROJECTS.filter(project => 
@@ -31,7 +33,10 @@ export default function ProjectsPage() {
     <div className="flex min-h-screen bg-background">
       <VexaSidebar />
 
-      <main className="flex-1 lg:ml-64 flex flex-col">
+      <main className={cn(
+        "flex-1 flex flex-col transition-all duration-300 ease-in-out",
+        isCollapsed ? "lg:ml-20" : "lg:ml-64"
+      )}>
         <header className="px-8 pt-12 pb-8 flex items-start justify-between max-w-7xl mx-auto w-full">
           <div>
             <p className="text-[10px] font-bold tracking-[0.2em] text-zinc-500 uppercase mb-2">Workspace</p>

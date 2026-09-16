@@ -28,6 +28,7 @@ import { VexaSidebar } from '@/components/layout/sidebar';
 import { cn } from '@/lib/utils';
 import { runVexaBrain } from '@/ai/flows/vexa-brain';
 import { useToast } from '@/hooks/use-toast';
+import { useSidebar } from '@/components/layout/sidebar-context';
 
 type AgentRole = 'Planner' | 'Coder' | 'Debugger' | 'Reviewer' | 'Deployer' | 'VEXA AI';
 
@@ -43,6 +44,7 @@ export default function WorkspacePage() {
   const { id } = useParams();
   const project = INITIAL_PROJECTS.find(p => p.id === id) || INITIAL_PROJECTS[0];
   const { toast } = useToast();
+  const { isCollapsed } = useSidebar();
   
   const [messages, setMessages] = useState<Message[]>([
     { role: 'assistant', content: `Hello! I'm VEXA V1, your autonomous engineering agent. I've indexed **${project.name}**. How can I help you build today?`, type: 'text', agent: 'VEXA AI' }
@@ -143,7 +145,10 @@ export default function WorkspacePage() {
     <div className="flex h-screen bg-[#09090b] overflow-hidden">
       <VexaSidebar />
 
-      <main className="flex-1 lg:ml-64 flex flex-col h-full">
+      <main className={cn(
+        "flex-1 flex flex-col h-full transition-all duration-300 ease-in-out",
+        isCollapsed ? "lg:ml-20" : "lg:ml-64"
+      )}>
         {/* Workspace Header */}
         <header className="h-14 border-b border-zinc-800/50 bg-[#09090b] flex items-center justify-between px-6 shrink-0">
           <div className="flex items-center gap-6">

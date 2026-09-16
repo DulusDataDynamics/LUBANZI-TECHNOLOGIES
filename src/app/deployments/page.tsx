@@ -18,10 +18,12 @@ import { INITIAL_PROJECTS } from '@/lib/mock-data';
 import { VexaSidebar } from '@/components/layout/sidebar';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
+import { useSidebar } from '@/components/layout/sidebar-context';
 
 export default function DeploymentsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const { toast } = useToast();
+  const { isCollapsed } = useSidebar();
 
   const allDeployments = useMemo(() => {
     const deployments = INITIAL_PROJECTS.flatMap(p => 
@@ -48,7 +50,10 @@ export default function DeploymentsPage() {
     <div className="flex min-h-screen bg-[#09090b]">
       <VexaSidebar />
 
-      <main className="flex-1 lg:ml-64 flex flex-col">
+      <main className={cn(
+        "flex-1 flex flex-col transition-all duration-300 ease-in-out",
+        isCollapsed ? "lg:ml-20" : "lg:ml-64"
+      )}>
         <header className="h-16 border-b border-zinc-800/50 flex items-center justify-between px-8 bg-[#09090b]/80 backdrop-blur-md sticky top-0 z-40">
           <h2 className="text-xl font-bold flex items-center gap-3">
             <GitBranch className="w-5 h-5 text-primary" /> Deployments
