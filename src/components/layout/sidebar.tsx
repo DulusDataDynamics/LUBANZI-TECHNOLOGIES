@@ -33,7 +33,7 @@ export function VexaSidebar() {
       {/* Mobile Trigger */}
       <button 
         onClick={() => setIsOpen(!isOpen)}
-        className="lg:hidden fixed top-4 left-4 z-[60] p-2 bg-zinc-900 border border-zinc-800 rounded-xl shadow-xl"
+        className="lg:hidden fixed top-4 left-4 z-[60] p-2 bg-black border border-border rounded-lg shadow-xl"
       >
         {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
       </button>
@@ -41,62 +41,56 @@ export function VexaSidebar() {
       {/* Overlay */}
       {isOpen && (
         <div 
-          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 lg:hidden"
+          className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 lg:hidden"
           onClick={() => setIsOpen(false)}
         />
       )}
 
       <aside className={cn(
-        "w-64 border-r border-zinc-800/50 bg-[#09090b] flex flex-col h-screen fixed left-0 top-0 z-50 transition-transform duration-300 lg:translate-x-0",
+        "w-64 border-r border-border bg-background flex flex-col h-screen fixed left-0 top-0 z-50 transition-transform duration-300 lg:translate-x-0",
         isOpen ? "translate-x-0" : "-translate-x-full"
       )}>
         <div className="p-6">
-          <Link href="/" className="flex items-center gap-3 mb-10 group" onClick={() => setIsOpen(false)}>
-            <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center shadow-lg shadow-primary/20 group-hover:scale-105 transition-transform">
-              <Terminal className="text-white w-6 h-6" />
+          <Link href="/" className="flex items-center gap-3 mb-12 group" onClick={() => setIsOpen(false)}>
+            <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform">
+              <Terminal className="text-black w-5 h-5" />
             </div>
             <div>
-              <h1 className="font-bold text-xl tracking-tight">VEXA</h1>
-              <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-semibold tracking-tighter">AI Engineer</p>
+              <h1 className="font-bold text-lg tracking-tight">VEXA</h1>
+              <p className="text-[8px] text-zinc-600 uppercase tracking-[0.3em] font-bold">Workspace</p>
             </div>
           </Link>
           
-          <nav className="space-y-2">
+          <nav className="space-y-1">
             {navItems.map((item) => (
               <Link 
                 key={item.href}
                 href={item.href} 
                 onClick={() => setIsOpen(false)}
                 className={cn(
-                  "flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all group",
+                  "flex items-center gap-3 px-3 py-2 rounded-md text-xs font-semibold transition-all group tracking-wide",
                   pathname === item.href 
-                    ? 'bg-primary/10 text-primary border border-primary/20 shadow-inner' 
-                    : 'text-zinc-500 hover:text-zinc-200 hover:bg-zinc-800/40'
+                    ? 'bg-zinc-900 text-white' 
+                    : 'text-zinc-500 hover:text-zinc-200 hover:bg-zinc-900/50'
                 )}
               >
                 {item.icon}
                 {item.label}
-                {pathname === item.href && <ChevronRight className="w-3 h-3 ml-auto opacity-50" />}
               </Link>
             ))}
           </nav>
         </div>
         
-        <div className="mt-auto p-6 space-y-6">
-          <div className="bg-zinc-900/50 rounded-2xl p-5 border border-zinc-800/50 relative overflow-hidden group">
-            <div className="absolute top-0 right-0 w-24 h-24 bg-primary/5 rounded-full -mr-12 -mt-12 blur-2xl group-hover:bg-primary/10 transition-colors" />
-            <p className="text-[10px] text-zinc-500 mb-3 uppercase tracking-widest font-bold">System Status</p>
+        <div className="mt-auto p-6 space-y-4">
+          <div className="bg-zinc-900/40 rounded-lg p-4 border border-border">
             <div className="flex items-center gap-3">
-              <div className="relative">
-                <div className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
-                <div className="absolute inset-0 w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping opacity-75" />
-              </div>
-              <span className="text-sm font-semibold">Agents Online</span>
+              <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+              <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">System Ready</span>
             </div>
           </div>
 
           <Link href="/settings" onClick={() => setIsOpen(false)}>
-            <Button variant="ghost" className="w-full justify-start gap-3 text-zinc-500 hover:text-zinc-200 rounded-xl">
+            <Button variant="ghost" className="w-full justify-start gap-3 text-zinc-500 hover:text-zinc-200 text-xs font-semibold rounded-md px-3 h-9">
               <Settings className="w-4 h-4" />
               Settings
             </Button>
