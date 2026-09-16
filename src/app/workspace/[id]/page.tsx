@@ -23,8 +23,9 @@ import { Badge } from '@/components/ui/badge';
 import { INITIAL_PROJECTS } from '@/lib/mock-data';
 import { VexaSidebar } from '@/components/layout/sidebar';
 import { cn } from '@/lib/utils';
+import { runVexaBrain } from '@/ai/flows/vexa-brain';
 
-type AgentRole = 'Planner' | 'Coder' | 'Debugger' | 'Reviewer' | 'Deployer';
+type AgentRole = 'Planner' | 'Coder' | 'Debugger' | 'Reviewer' | 'Deployer' | 'VEXA AI';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -37,8 +38,9 @@ interface Message {
 export default function WorkspacePage() {
   const { id } = useParams();
   const project = INITIAL_PROJECTS.find(p => p.id === id) || INITIAL_PROJECTS[0];
+  
   const [messages, setMessages] = useState<Message[]>([
-    { role: 'assistant', content: `Hello! I'm VEXA, your autonomous engineering agent. I've indexed **${project.name}**. How can I help you build today?`, type: 'text' }
+    { role: 'assistant', content: `Hello! I'm VEXA V1, your autonomous engineering agent. I've indexed **${project.name}**. How can I help you build today?`, type: 'text', agent: 'VEXA AI' }
   ]);
   const [input, setInput] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
@@ -57,70 +59,69 @@ export default function WorkspacePage() {
     }
   }, [messages]);
 
-  const handleSendMessage = (e: React.FormEvent) => {
+  const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim() || isProcessing) return;
     
-    const userMessage: Message = { role: 'user', content: input, type: 'text' };
+    const userQuery = input;
+    const userMessage: Message = { role: 'user', content: userQuery, type: 'text' };
     setMessages(prev => [...prev, userMessage]);
     setInput('');
     setIsProcessing(true);
 
-    // Reset tasks
+    // Initial Status
     setCurrentTasks([
       { id: 1, status: 'active', label: 'Understanding Request' },
       { id: 2, status: 'pending', label: 'Inspecting Project' },
       { id: 3, status: 'pending', label: 'Implementation Plan' },
       { id: 4, status: 'pending', label: 'Review & Test' },
     ]);
-    
-    // Simulate Agent Workflow
-    simulateAgentWorkflow(input);
-  };
 
-  const simulateAgentWorkflow = async (userQuery: string) => {
-    // 1. Planner Agent
-    await new Promise(r => setTimeout(r, 1000));
-    setMessages(prev => [...prev, { 
-      role: 'assistant', 
-      content: `I'm analyzing your request: "${userQuery}". I'll start by mapping out the necessary architectural changes.`, 
-      type: 'agent-status',
-      agent: 'Planner',
-      status: 'thinking'
-    }]);
-    setCurrentTasks(prev => prev.map(t => t.id === 1 ? { ...t, status: 'complete' } : t.id === 2 ? { ...t, status: 'active' } : t));
+    try {
+      // Trigger Real AI Brain
+      const aiResponse = await runVexaBrain({
+        projectId: project.id,
+        userQuery: userQuery,
+        fileMetadata: project.files.map(f => ({ path: f.path, name: f.name, language: f.language })),
+        history: messages.filter(m => m.type === 'text').map(m => ({ role: m.role, content: m.content }))
+      });
 
-    // 2. Coder Agent
-    await new Promise(r => setTimeout(r, 2000));
-    setMessages(prev => [...prev, { 
-      role: 'assistant', 
-      content: `Planner finished. I'm now implementing the core logic in the relevant modules.`, 
-      type: 'agent-status',
-      agent: 'Coder',
-      status: 'implementing'
-    }]);
-    setCurrentTasks(prev => prev.map(t => t.id === 2 ? { ...t, status: 'complete' } : t.id === 3 ? { ...t, status: 'active' } : t));
+      // Update Workspace with AI Insights
+      setMessages(prev => [
+        ...prev, 
+        { 
+          role: 'assistant', 
+          content: aiResponse.analysis, 
+          type: 'text', 
+          agent: 'VEXA AI' 
+        }
+      ]);
 
-    // 3. Reviewer Agent
-    await new Promise(r => setTimeout(r, 2000));
-    setMessages(prev => [...prev, { 
-      role: 'assistant', 
-      content: `Code changes applied. I'm reviewing for security, performance, and best practices.`, 
-      type: 'agent-status',
-      agent: 'Reviewer',
-      status: 'reviewing'
-    }]);
-    setCurrentTasks(prev => prev.map(t => t.id === 3 ? { ...t, status: 'complete' } : t.id === 4 ? { ...t, status: 'active' } : t));
+      // If there's a plan, show it as an agent action
+      if (aiResponse.plan.length > 0) {
+        setMessages(prev => [
+          ...prev,
+          {
+            role: 'assistant',
+            content: `PLANNING:\n${aiResponse.plan.map((step, i) => `${i + 1}. ${step}`).join('\n')}`,
+            type: 'agent-status',
+            agent: 'Planner',
+            status: 'complete'
+          }
+        ]);
+      }
 
-    // 4. Final Result
-    await new Promise(r => setTimeout(r, 1500));
-    setMessages(prev => [...prev, { 
-      role: 'assistant', 
-      content: `Task complete! I've updated the project files. You can review the changes in the 'Recent Changes' log.`, 
-      type: 'text'
-    }]);
-    setCurrentTasks(prev => prev.map(t => t.id === 4 ? { ...t, status: 'complete' } : t));
-    setIsProcessing(false);
+      // Update tasks from AI
+      setCurrentTasks(aiResponse.tasks.map((t, i) => ({ id: i + 1, ...t })));
+
+    } catch (error) {
+      setMessages(prev => [
+        ...prev,
+        { role: 'assistant', content: "System Error: VEXA AI encountered an issue processing that request. Please try again.", type: 'text' }
+      ]);
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   return (
@@ -170,6 +171,7 @@ export default function WorkspacePage() {
                           msg.agent === 'Planner' ? 'bg-amber-500/20 text-amber-500' :
                           msg.agent === 'Coder' ? 'bg-primary/20 text-primary' :
                           msg.agent === 'Reviewer' ? 'bg-emerald-500/20 text-emerald-500' :
+                          msg.agent === 'VEXA AI' ? 'bg-purple-500/20 text-purple-400' :
                           'bg-zinc-800 text-zinc-400'
                         )}>
                           {msg.agent === 'Planner' ? <Layers className="w-3 h-3" /> :
@@ -188,7 +190,7 @@ export default function WorkspacePage() {
                       </div>
                     )}
                     <div className={cn(
-                      "px-5 py-3.5 rounded-2xl text-sm leading-relaxed max-w-[90%] shadow-sm",
+                      "px-5 py-3.5 rounded-2xl text-sm whitespace-pre-wrap leading-relaxed max-w-[90%] shadow-sm",
                       msg.role === 'user' 
                         ? "bg-primary text-white font-medium" 
                         : "bg-zinc-900/80 border border-zinc-800/50 text-zinc-200"
@@ -207,7 +209,7 @@ export default function WorkspacePage() {
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   disabled={isProcessing}
-                  placeholder="Ask VEXA to build, fix, or explain..."
+                  placeholder="Ask VEXA V1 to build, fix, or explain..."
                   className="w-full bg-zinc-900/50 border border-zinc-800/50 rounded-2xl py-4 pl-5 pr-14 text-sm resize-none focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/20 min-h-[56px] custom-scrollbar transition-all group-hover:bg-zinc-900 disabled:opacity-50"
                   rows={1}
                   onKeyDown={(e) => {
