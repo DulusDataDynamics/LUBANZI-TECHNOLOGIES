@@ -78,11 +78,11 @@ export default function WorkspacePage() {
     ]);
 
     try {
-      // Trigger Real AI Brain
+      // Trigger Real AI Brain with full file context
       const aiResponse = await runVexaBrain({
         projectId: project.id,
         userQuery: userQuery,
-        fileMetadata: project.files.map(f => ({ path: f.path, name: f.name, language: f.language })),
+        files: project.files, // Pass full files including content
         history: messages.filter(m => m.type === 'text').map(m => ({ role: m.role, content: m.content }))
       });
 
@@ -229,9 +229,9 @@ export default function WorkspacePage() {
                 </Button>
               </form>
               <div className="flex flex-wrap justify-center gap-2 sm:gap-4 mt-3">
-                <QuickAction icon={<ShieldCheck className="w-3 h-3" />} label="Fix Bug" onClick={() => setInput("Identify and fix the hydration error in the layout.")} />
-                <QuickAction icon={<Zap className="w-3 h-3" />} label="Improve Code" onClick={() => setInput("Refactor the workspace component for better performance.")} />
-                <QuickAction icon={<FileCode className="w-3 h-3" />} label="Explain File" onClick={() => setInput("What is the purpose of the mock-data library?")} />
+                <QuickAction icon={<ShieldCheck className="w-3 h-3" />} label="Fix Bug" onClick={() => setInput("Identify and fix potential issues in the codebase.")} />
+                <QuickAction icon={<Zap className="w-3 h-3" />} label="Explain Project" onClick={() => setInput("Explain the current project architecture based on the files you see.")} />
+                <QuickAction icon={<FileCode className="w-3 h-3" />} label="Security Audit" onClick={() => setInput("Perform a security review of the authentication logic.")} />
               </div>
             </div>
           </div>

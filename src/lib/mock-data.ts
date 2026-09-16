@@ -61,15 +61,53 @@ export const INITIAL_PROJECTS: VexaProject[] = [
     recentActivity: 'Deployment to production completed successfully',
     memory: {
       purpose: 'Provide autonomous high-velocity software engineering automation agents directly inside browser workspaces.',
-      architecture: 'Next.js App Router, Tailwind CSS, ShadCN components, state machine providers, and Genkit intelligence Plugins.',
-      preferences: 'Strict TypeScript usage, functional code modularity, minimal reliance on bulky client libraries, clear logs.',
+      architecture: 'Next.js App Router, Tailwind CSS, ShadCN components, and Genkit intelligence Plugins.',
+      preferences: 'Strict TypeScript usage, functional code modularity, and clear logging.',
       knownIssues: 'Minor hydration discrepancy when pulling real-time timestamp seeds on the server edge.'
     },
     files: [
-      { path: 'src/app/page.tsx', name: 'page.tsx', content: '', language: 'typescript' },
-      { path: 'src/components/navbar.tsx', name: 'navbar.tsx', content: '', language: 'typescript' },
-      { path: 'src/lib/auth.ts', name: 'auth.ts', content: '', language: 'typescript' },
-      { path: 'package.json', name: 'package.json', content: '', language: 'json' }
+      { 
+        path: 'src/app/page.tsx', 
+        name: 'page.tsx', 
+        language: 'typescript',
+        content: `"use client"
+import React from 'react';
+import { VexaSidebar } from '@/components/layout/sidebar';
+
+export default function VexaDashboard() {
+  return (
+    <div className="flex min-h-screen bg-[#09090b]">
+      <VexaSidebar />
+      <main className="flex-1 p-8">
+        <h1 className="text-3xl font-bold">Welcome back, Engineer</h1>
+      </main>
+    </div>
+  );
+}`
+      },
+      { 
+        path: 'src/lib/auth.ts', 
+        name: 'auth.ts', 
+        language: 'typescript',
+        content: `export const getAuthSession = async () => {
+  // TODO: Implement actual clerk/auth.js integration
+  return { user: { name: 'Vexa User', role: 'admin' } };
+};`
+      },
+      { 
+        path: 'package.json', 
+        name: 'package.json', 
+        language: 'json',
+        content: `{
+  "name": "vexa-core",
+  "dependencies": {
+    "next": "15.0.0",
+    "react": "19.0.0",
+    "genkit": "1.0.0",
+    "lucide-react": "^0.450.0"
+  }
+}`
+      }
     ],
     changes: [
       {
@@ -79,26 +117,14 @@ export const INITIAL_PROJECTS: VexaProject[] = [
         summary: 'Scaffold authorization provider matrix middleware',
         explanation: 'Enables high security claim inspection protocols requested by the project roadmap specification.',
         timestamp: '10 mins ago'
-      },
-      {
-        id: 'c2',
-        file: 'src/components/navbar.tsx',
-        type: 'Updated',
-        summary: 'Inject live state indicators into code explorer headers',
-        explanation: 'Improves clarity for developers checking deployment conditions in real-time streams.',
-        timestamp: '1 hour ago'
       }
     ],
     activities: [
       { id: 'act-1', type: 'create', title: 'Project Initialized', description: 'Vexa Workspace configured and structure mapped.', timestamp: '2 hours ago' },
-      { id: 'act-2', type: 'task', title: 'Feature Request: Add Auth Scaffolding', description: 'Vexa assigned Planner to partition the work, Coder to formulate logic.', timestamp: '45 mins ago', agent: 'Planner' },
-      { id: 'act-3', type: 'review', title: 'Code Review Approved', description: 'Reviewer checked safety guidelines and verified zero vulnerable packages.', timestamp: '15 mins ago', agent: 'Reviewer' },
-      { id: 'act-4', type: 'deploy', title: 'Production Deploy Initiated', description: 'Deployer bundled edge routes into static optimize files.', timestamp: '10 mins ago', agent: 'Deployer' }
+      { id: 'act-2', type: 'task', title: 'Feature Request: Add Auth Scaffolding', description: 'Vexa assigned Planner to partition the work, Coder to formulate logic.', timestamp: '45 mins ago', agent: 'Planner' }
     ],
     deployments: [
-      { id: 'd-1', environment: 'Production', status: 'Successful', version: 'v1.4.0', timestamp: '10 mins ago', commitMessage: 'Merge feature/auth-scaffolding into main' },
-      { id: 'd-2', environment: 'Preview', status: 'Successful', version: 'v1.4.0-rc1', timestamp: '25 mins ago', commitMessage: 'Drafting new middleware verification layers' },
-      { id: 'd-3', environment: 'Development', status: 'Successful', version: 'v1.3.9', timestamp: '1 hour ago', commitMessage: 'Update workspace parameters' }
+      { id: 'd-1', environment: 'Production', status: 'Successful', version: 'v1.4.0', timestamp: '10 mins ago', commitMessage: 'Merge feature/auth-scaffolding into main' }
     ]
   },
   {
@@ -114,25 +140,22 @@ export const INITIAL_PROJECTS: VexaProject[] = [
       knownIssues: 'Rate limits encountered during bulk requests to remote domain registries.'
     },
     files: [
-      { path: 'main.py', name: 'main.py', content: '', language: 'python' },
-      { path: 'utils/chunker.py', name: 'chunker.py', content: '', language: 'python' }
-    ],
-    changes: [
-      {
-        id: 'cs-1',
-        file: 'utils/chunker.py',
-        type: 'Updated',
-        summary: 'Fix split index out of bounds glitch',
-        explanation: 'Encountered variable length input batches which caused negative index calculation slice failures.',
-        timestamp: 'Yesterday'
+      { 
+        path: 'main.py', 
+        name: 'main.py', 
+        language: 'python',
+        content: `import asyncio
+from crawler.engine import Scraper
+
+async def main():
+    scraper = Scraper(concurrent=True)
+    await scraper.start()`
       }
     ],
+    changes: [],
     activities: [
-      { id: 'act-s1', type: 'create', title: 'Python Crawler Created', description: 'Scaffolder set up virtual environments and requirements indices.', timestamp: 'Yesterday' },
-      { id: 'act-s2', type: 'fix', title: 'Bug Identified: Out of Bounds', description: 'Debugger tracked crash site to chunker offset index 42.', timestamp: 'Yesterday', agent: 'Debugger' }
+      { id: 'act-s1', type: 'create', title: 'Python Crawler Created', description: 'Scaffolder set up virtual environments and requirements indices.', timestamp: 'Yesterday' }
     ],
-    deployments: [
-      { id: 'd-s1', environment: 'Development', status: 'Successful', version: 'v0.1.2', timestamp: 'Yesterday', commitMessage: 'Resolve splitter calculation crashes' }
-    ]
+    deployments: []
   }
 ];
