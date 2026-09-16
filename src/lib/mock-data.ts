@@ -66,10 +66,10 @@ export const INITIAL_PROJECTS: VexaProject[] = [
       knownIssues: 'Minor hydration discrepancy when pulling real-time timestamp seeds on the server edge.'
     },
     files: [
-      { path: 'src/app/page.tsx', name: 'page.tsx', content: `'use client';\nexport default function Home() {\n  return <main>Welcome to Next Auth Dashboard</main>;\n}`, language: 'typescript' },
-      { path: 'src/components/navbar.tsx', name: 'navbar.tsx', content: `export function Navbar() {\n  return <nav className="p-4 bg-zinc-900 border-b">Logo</nav>;\n}`, language: 'typescript' },
-      { path: 'src/lib/auth.ts', name: 'auth.ts', content: `export const authOptions = {\n  secret: process.env.NEXTAUTH_SECRET,\n  providers: []\n};`, language: 'typescript' },
-      { path: 'package.json', name: 'package.json', content: `{\n  "name": "vexa-core",\n  "version": "1.4.0"\n}`, language: 'json' }
+      { path: 'src/app/page.tsx', name: 'page.tsx', content: '', language: 'typescript' },
+      { path: 'src/components/navbar.tsx', name: 'navbar.tsx', content: '', language: 'typescript' },
+      { path: 'src/lib/auth.ts', name: 'auth.ts', content: '', language: 'typescript' },
+      { path: 'package.json', name: 'package.json', content: '', language: 'json' }
     ],
     changes: [
       {
@@ -114,8 +114,8 @@ export const INITIAL_PROJECTS: VexaProject[] = [
       knownIssues: 'Rate limits encountered during bulk requests to remote domain registries.'
     },
     files: [
-      { path: 'main.py', name: 'main.py', content: `import asyncio\nasync def main():\n    print("Starting concurrent agent system...")\n\nif __name__ == "__main__":\n    asyncio.run(main())`, language: 'python' },
-      { path: 'utils/chunker.py', name: 'chunker.py', content: `def chunk_text(text: str, size: int = 500):\n    return [text[i:i+size] for i in range(0, len(text), size)]`, language: 'python' }
+      { path: 'main.py', name: 'main.py', content: '', language: 'python' },
+      { path: 'utils/chunker.py', name: 'chunker.py', content: '', language: 'python' }
     ],
     changes: [
       {
