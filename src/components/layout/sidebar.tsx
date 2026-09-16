@@ -1,21 +1,27 @@
+
 "use client"
 
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { 
-  Terminal, 
   LayoutDashboard, 
   Box, 
   Activity, 
   GitBranch, 
   Settings, 
-  ChevronRight,
   Menu,
   X
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+
+const VLogo = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-black">
+    <path d="M3 3L12 21L21 3" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M12 21L17 11" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" opacity="0.6"/>
+  </svg>
+);
 
 export function VexaSidebar() {
   const pathname = usePathname();
@@ -53,7 +59,7 @@ export function VexaSidebar() {
         <div className="p-6">
           <Link href="/" className="flex items-center gap-3 mb-12 group" onClick={() => setIsOpen(false)}>
             <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform">
-              <Terminal className="text-black w-5 h-5" />
+              <VLogo />
             </div>
             <div>
               <h1 className="font-bold text-lg tracking-tight">VEXA</h1>
