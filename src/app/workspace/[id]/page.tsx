@@ -27,6 +27,7 @@ import { INITIAL_PROJECTS } from '@/lib/mock-data';
 import { VexaSidebar } from '@/components/layout/sidebar';
 import { cn } from '@/lib/utils';
 import { runVexaBrain } from '@/ai/flows/vexa-brain';
+import { useToast } from '@/hooks/use-toast';
 
 type AgentRole = 'Planner' | 'Coder' | 'Debugger' | 'Reviewer' | 'Deployer' | 'VEXA AI';
 
@@ -41,6 +42,7 @@ interface Message {
 export default function WorkspacePage() {
   const { id } = useParams();
   const project = INITIAL_PROJECTS.find(p => p.id === id) || INITIAL_PROJECTS[0];
+  const { toast } = useToast();
   
   const [messages, setMessages] = useState<Message[]>([
     { role: 'assistant', content: `Hello! I'm VEXA V1, your autonomous engineering agent. I've indexed **${project.name}**. How can I help you build today?`, type: 'text', agent: 'VEXA AI' }
@@ -123,6 +125,20 @@ export default function WorkspacePage() {
     }
   };
 
+  const handleDeploy = () => {
+    toast({
+      title: "Deployment Initiated",
+      description: `VEXA is building a preview for ${project.name}...`,
+    });
+  };
+
+  const handleShowLogs = () => {
+    toast({
+      title: "Log Stream Connected",
+      description: "Real-time build logs are now streaming to the console.",
+    });
+  };
+
   return (
     <div className="flex h-screen bg-[#09090b] overflow-hidden">
       <VexaSidebar />
@@ -159,10 +175,19 @@ export default function WorkspacePage() {
           </div>
           
           <div className="flex items-center gap-3">
-            <Button variant="outline" size="sm" className="h-8 rounded-lg border-zinc-800 gap-2 text-[10px] font-bold uppercase">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={handleShowLogs}
+              className="h-8 rounded-lg border-zinc-800 gap-2 text-[10px] font-bold uppercase hover:bg-zinc-900"
+            >
               <Terminal className="w-3.5 h-3.5" /> Logs
             </Button>
-            <Button size="sm" className="h-8 rounded-lg gap-2 text-[10px] font-bold uppercase bg-zinc-900 hover:bg-zinc-800 text-zinc-100 border border-zinc-800">
+            <Button 
+              size="sm" 
+              onClick={handleDeploy}
+              className="h-8 rounded-lg gap-2 text-[10px] font-bold uppercase bg-zinc-900 hover:bg-zinc-800 text-zinc-100 border border-zinc-800"
+            >
               <Rocket className="w-3.5 h-3.5 text-zinc-400" /> Deploy
             </Button>
           </div>

@@ -1,7 +1,7 @@
 
 "use client"
 
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   Settings, 
   User, 
@@ -14,12 +14,38 @@ import {
   Lock
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { VexaSidebar } from '@/components/layout/sidebar';
 import { cn } from '@/lib/utils';
+import { useToast } from '@/hooks/use-toast';
 
 export default function SettingsPage() {
+  const { toast } = useToast();
+  const [activeLayer, setActiveLayer] = useState<'vexa' | 'vision'>('vexa');
+
+  const handlePreferenceClick = (label: string) => {
+    toast({
+      title: `${label} Accessed`,
+      description: `VEXA is retrieving your ${label.toLowerCase()} configuration...`,
+    });
+  };
+
+  const handleEditProfile = () => {
+    toast({
+      title: "Profile Editor",
+      description: "Profile modification is currently in read-only mode for this workspace.",
+    });
+  };
+
+  const handleLayerSwitch = (layer: 'vexa' | 'vision') => {
+    setActiveLayer(layer);
+    toast({
+      title: "Intelligence Switched",
+      description: `Now using ${layer === 'vexa' ? 'VEXA V1.4.0' : 'Vision Analysis'} as the primary reasoning engine.`,
+    });
+  };
+
   return (
     <div className="flex min-h-screen bg-[#09090b]">
       <VexaSidebar />
@@ -39,7 +65,7 @@ export default function SettingsPage() {
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
-                    <div className="w-16 h-16 rounded-2xl bg-primary/20 flex items-center justify-center text-primary font-bold text-xl">
+                    <div className="w-16 h-16 rounded-2xl bg-primary/20 flex items-center justify-center text-primary font-bold text-xl border border-primary/20">
                       JD
                     </div>
                     <div>
@@ -47,7 +73,13 @@ export default function SettingsPage() {
                       <p className="text-sm text-zinc-500">Senior Systems Architect</p>
                     </div>
                   </div>
-                  <Button variant="outline" className="border-zinc-800 bg-zinc-900 hover:bg-zinc-800">Edit Profile</Button>
+                  <Button 
+                    variant="outline" 
+                    onClick={handleEditProfile}
+                    className="border-zinc-800 bg-zinc-900 hover:bg-zinc-800"
+                  >
+                    Edit Profile
+                  </Button>
                 </div>
               </CardContent>
             </Card>
@@ -63,13 +95,15 @@ export default function SettingsPage() {
                 icon={<Cpu className="w-5 h-5 text-primary" />} 
                 title="VEXA V1.4.0" 
                 description="Active high-velocity reasoning model."
-                active={true}
+                active={activeLayer === 'vexa'}
+                onClick={() => handleLayerSwitch('vexa')}
               />
               <SettingsCard 
-                icon={<Zap className="w-5 h-5 text-zinc-600" />} 
+                icon={<Zap className={cn("w-5 h-5", activeLayer === 'vision' ? "text-primary" : "text-zinc-600")} />} 
                 title="Vision Analysis" 
                 description="Asset generation & visual debugging."
-                active={false}
+                active={activeLayer === 'vision'}
+                onClick={() => handleLayerSwitch('vision')}
               />
             </div>
           </section>
@@ -78,10 +112,30 @@ export default function SettingsPage() {
           <section className="space-y-4">
             <h3 className="text-sm font-bold uppercase tracking-widest text-zinc-500">System Preferences</h3>
             <div className="space-y-2">
-              <SettingLink icon={<Shield className="w-4 h-4" />} label="Security & Access" sub="Manage API keys and project permissions" />
-              <SettingLink icon={<Bell className="w-4 h-4" />} label="Notifications" sub="Configure email and workspace alerts" />
-              <SettingLink icon={<CreditCard className="w-4 h-4" />} label="Billing & Subscription" sub="Manage your workspace plan" />
-              <SettingLink icon={<Lock className="w-4 h-4" />} label="Privacy" sub="Data retention and project indexing policies" />
+              <SettingLink 
+                icon={<Shield className="w-4 h-4" />} 
+                label="Security & Access" 
+                sub="Manage API keys and project permissions" 
+                onClick={() => handlePreferenceClick("Security")}
+              />
+              <SettingLink 
+                icon={<Bell className="w-4 h-4" />} 
+                label="Notifications" 
+                sub="Configure email and workspace alerts" 
+                onClick={() => handlePreferenceClick("Notifications")}
+              />
+              <SettingLink 
+                icon={<CreditCard className="w-4 h-4" />} 
+                label="Billing & Subscription" 
+                sub="Manage your workspace plan" 
+                onClick={() => handlePreferenceClick("Billing")}
+              />
+              <SettingLink 
+                icon={<Lock className="w-4 h-4" />} 
+                label="Privacy" 
+                sub="Data retention and project indexing policies" 
+                onClick={() => handlePreferenceClick("Privacy")}
+              />
             </div>
           </section>
 
@@ -94,15 +148,27 @@ export default function SettingsPage() {
   );
 }
 
-function SettingsCard({ icon, title, description, active }: { icon: React.ReactNode, title: string, description: string, active: boolean }) {
+function SettingsCard({ icon, title, description, active, onClick }: { 
+  icon: React.ReactNode, 
+  title: string, 
+  description: string, 
+  active: boolean,
+  onClick: () => void 
+}) {
   return (
-    <Card className={cn(
-      "bg-zinc-900/40 border-zinc-800/50 hover:bg-zinc-800/30 transition-all cursor-pointer",
-      active && "border-primary/40 ring-1 ring-primary/20"
-    )}>
+    <Card 
+      onClick={onClick}
+      className={cn(
+        "bg-zinc-900/40 border-zinc-800/50 hover:bg-zinc-800/30 transition-all cursor-pointer group",
+        active && "border-primary/40 ring-1 ring-primary/20"
+      )}
+    >
       <CardContent className="p-6">
         <div className="flex items-start justify-between mb-4">
-          <div className="p-2 bg-zinc-950 rounded-xl border border-zinc-800">
+          <div className={cn(
+            "p-2 bg-zinc-950 rounded-xl border transition-colors",
+            active ? "border-primary/20" : "border-zinc-800"
+          )}>
             {icon}
           </div>
           {active && <Badge className="bg-primary text-[9px] text-primary-foreground border-none">ACTIVE</Badge>}
@@ -114,9 +180,17 @@ function SettingsCard({ icon, title, description, active }: { icon: React.ReactN
   );
 }
 
-function SettingLink({ icon, label, sub }: { icon: React.ReactNode, label: string, sub: string }) {
+function SettingLink({ icon, label, sub, onClick }: { 
+  icon: React.ReactNode, 
+  label: string, 
+  sub: string,
+  onClick: () => void 
+}) {
   return (
-    <div className="flex items-center justify-between p-4 rounded-xl hover:bg-zinc-800/30 transition-all cursor-pointer group">
+    <div 
+      onClick={onClick}
+      className="flex items-center justify-between p-4 rounded-xl hover:bg-zinc-800/30 transition-all cursor-pointer group"
+    >
       <div className="flex items-center gap-4">
         <div className="text-zinc-500 group-hover:text-primary transition-colors">
           {icon}
