@@ -1,139 +1,138 @@
-export type ProductCategory = 'Bracelets' | 'Keychains' | 'Photocards';
+export interface ProjectFile {
+  path: string;
+  name: string;
+  content: string;
+  language: string;
+}
 
-export interface Product {
+export interface CodeChange {
+  id: string;
+  file: string;
+  type: 'Created' | 'Updated' | 'Deleted' | 'Renamed';
+  summary: string;
+  explanation: string;
+  timestamp: string;
+}
+
+export interface ActivityLog {
+  id: string;
+  type: 'create' | 'task' | 'fix' | 'review' | 'deploy';
+  title: string;
+  description: string;
+  timestamp: string;
+  agent?: 'Coder' | 'Debugger' | 'Planner' | 'Reviewer' | 'Deployer';
+}
+
+export interface Deployment {
+  id: string;
+  environment: 'Development' | 'Preview' | 'Production';
+  status: 'Successful' | 'Building' | 'Failed';
+  version: string;
+  timestamp: string;
+  commitMessage: string;
+}
+
+export interface ProjectMemory {
+  purpose: string;
+  architecture: string;
+  preferences: string;
+  knownIssues: string;
+}
+
+export interface VexaProject {
   id: string;
   name: string;
-  price: number;
   description: string;
-  category: ProductCategory;
-  images: string[];
-  tags: string[];
-  isBestseller?: boolean;
-  stockCount: number;
-  personalizable?: boolean;
+  status: 'Idle' | 'Thinking' | 'Coding' | 'Reviewing' | 'Deploying';
+  recentActivity: string;
+  files: ProjectFile[];
+  changes: CodeChange[];
+  activities: ActivityLog[];
+  deployments: Deployment[];
+  memory: ProjectMemory;
 }
 
-export const PRODUCTS: Product[] = [
+export const INITIAL_PROJECTS: VexaProject[] = [
   {
-    id: '1',
-    name: 'Twilight Dream Bracelet',
-    price: 18.00,
-    description: 'A hand-knotted masterpiece featuring soft lavender and midnight blue threads. Finished with a gold crescent moon charm.',
-    category: 'Bracelets',
-    images: [
-      'https://picsum.photos/seed/bracelet1/600/800',
-      'https://picsum.photos/seed/bracelet1-2/600/800'
+    id: 'vexa-core',
+    name: 'Vexa SaaS Platform Core',
+    description: 'Next.js 15 app router system with ultra premium developer workspace metrics and integration layers.',
+    status: 'Idle',
+    recentActivity: 'Deployment to production completed successfully',
+    memory: {
+      purpose: 'Provide autonomous high-velocity software engineering automation agents directly inside browser workspaces.',
+      architecture: 'Next.js App Router, Tailwind CSS, ShadCN components, state machine providers, and Genkit intelligence Plugins.',
+      preferences: 'Strict TypeScript usage, functional code modularity, minimal reliance on bulky client libraries, clear logs.',
+      knownIssues: 'Minor hydration discrepancy when pulling real-time timestamp seeds on the server edge.'
+    },
+    files: [
+      { path: 'src/app/page.tsx', name: 'page.tsx', content: `'use client';\nexport default function Home() {\n  return <main>Welcome to Next Auth Dashboard</main>;\n}`, language: 'typescript' },
+      { path: 'src/components/navbar.tsx', name: 'navbar.tsx', content: `export function Navbar() {\n  return <nav className="p-4 bg-zinc-900 border-b">Logo</nav>;\n}`, language: 'typescript' },
+      { path: 'src/lib/auth.ts', name: 'auth.ts', content: `export const authOptions = {\n  secret: process.env.NEXTAUTH_SECRET,\n  providers: []\n};`, language: 'typescript' },
+      { path: 'package.json', name: 'package.json', content: `{\n  "name": "vexa-core",\n  "version": "1.4.0"\n}`, language: 'json' }
     ],
-    tags: ['pink', 'mixed', 'handmade'],
-    isBestseller: true,
-    stockCount: 5,
-    personalizable: true,
-  },
-  {
-    id: '2',
-    name: 'Strawberry Milkheart Keychain',
-    price: 14.50,
-    description: 'Acrylic heart filled with dried baby\'s breath and tiny pink heart glitter. Perfect for your favorite tote bag.',
-    category: 'Keychains',
-    images: [
-      'https://picsum.photos/seed/keychain1/600/800',
-      'https://picsum.photos/seed/keychain1-2/600/800'
+    changes: [
+      {
+        id: 'c1',
+        file: 'src/lib/auth.ts',
+        type: 'Created',
+        summary: 'Scaffold authorization provider matrix middleware',
+        explanation: 'Enables high security claim inspection protocols requested by the project roadmap specification.',
+        timestamp: '10 mins ago'
+      },
+      {
+        id: 'c2',
+        file: 'src/components/navbar.tsx',
+        type: 'Updated',
+        summary: 'Inject live state indicators into code explorer headers',
+        explanation: 'Improves clarity for developers checking deployment conditions in real-time streams.',
+        timestamp: '1 hour ago'
+      }
     ],
-    tags: ['acrylic', 'pink'],
-    isBestseller: true,
-    stockCount: 12,
-    personalizable: true,
-  },
-  {
-    id: '3',
-    name: 'Soft Glow Photocard Set',
-    price: 12.00,
-    description: 'A collection of 3 holographic-finish photocards with hand-drawn dreamy motifs. Collector\'s favorite.',
-    category: 'Photocards',
-    images: [
-      'https://picsum.photos/seed/pc1/600/800',
-      'https://picsum.photos/seed/pc1-2/600/800'
+    activities: [
+      { id: 'act-1', type: 'create', title: 'Project Initialized', description: 'Vexa Workspace configured and structure mapped.', timestamp: '2 hours ago' },
+      { id: 'act-2', type: 'task', title: 'Feature Request: Add Auth Scaffolding', description: 'Vexa assigned Planner to partition the work, Coder to formulate logic.', timestamp: '45 mins ago', agent: 'Planner' },
+      { id: 'act-3', type: 'review', title: 'Code Review Approved', description: 'Reviewer checked safety guidelines and verified zero vulnerable packages.', timestamp: '15 mins ago', agent: 'Reviewer' },
+      { id: 'act-4', type: 'deploy', title: 'Production Deploy Initiated', description: 'Deployer bundled edge routes into static optimize files.', timestamp: '10 mins ago', agent: 'Deployer' }
     ],
-    tags: ['K-pop inspired', 'love'],
-    isBestseller: true,
-    stockCount: 20,
-    personalizable: false,
+    deployments: [
+      { id: 'd-1', environment: 'Production', status: 'Successful', version: 'v1.4.0', timestamp: '10 mins ago', commitMessage: 'Merge feature/auth-scaffolding into main' },
+      { id: 'd-2', environment: 'Preview', status: 'Successful', version: 'v1.4.0-rc1', timestamp: '25 mins ago', commitMessage: 'Drafting new middleware verification layers' },
+      { id: 'd-3', environment: 'Development', status: 'Successful', version: 'v1.3.9', timestamp: '1 hour ago', commitMessage: 'Update workspace parameters' }
+    ]
   },
   {
-    id: '4',
-    name: 'Forest Whisper Bracelet',
-    price: 16.00,
-    description: 'Earthy greens and cream threads, knotted with intention. Features a tiny raw emerald-colored bead.',
-    category: 'Bracelets',
-    images: [
-      'https://picsum.photos/seed/bracelet2/600/800',
-      'https://picsum.photos/seed/bracelet2-2/600/800'
+    id: 'ai-scraper',
+    name: 'Python Intelligence Agent',
+    description: 'High performance concurrent crawler with semantic chunking and automated vector ingestion capabilities.',
+    status: 'Thinking',
+    recentActivity: 'Inspecting error reports in core collector threads',
+    memory: {
+      purpose: 'Extract technical release schedules from code repositories dynamically.',
+      architecture: 'Python 3.11, Asyncio, Playwright, Genkit SDK pipelines.',
+      preferences: 'Pydantic validation paradigms for all intermediate states.',
+      knownIssues: 'Rate limits encountered during bulk requests to remote domain registries.'
+    },
+    files: [
+      { path: 'main.py', name: 'main.py', content: `import asyncio\nasync def main():\n    print("Starting concurrent agent system...")\n\nif __name__ == "__main__":\n    asyncio.run(main())`, language: 'python' },
+      { path: 'utils/chunker.py', name: 'chunker.py', content: `def chunk_text(text: str, size: int = 500):\n    return [text[i:i+size] for i in range(0, len(text), size)]`, language: 'python' }
     ],
-    tags: ['blue', 'custom'],
-    isBestseller: false,
-    stockCount: 3,
-    personalizable: true,
-  },
-  {
-    id: '5',
-    name: 'Cloud Nine Resin Charm',
-    price: 15.00,
-    description: 'Resin cloud with encapsulated iridescent flakes. Comes with a lavender bag strap.',
-    category: 'Keychains',
-    images: [
-      'https://picsum.photos/seed/keychain2/600/800',
-      'https://picsum.photos/seed/keychain2-2/600/800'
+    changes: [
+      {
+        id: 'cs-1',
+        file: 'utils/chunker.py',
+        type: 'Updated',
+        summary: 'Fix split index out of bounds glitch',
+        explanation: 'Encountered variable length input batches which caused negative index calculation slice failures.',
+        timestamp: 'Yesterday'
+      }
     ],
-    tags: ['resin', 'purple'],
-    isBestseller: false,
-    stockCount: 8,
-    personalizable: true,
-  },
-  {
-    id: '6',
-    name: 'Sunset Serenade Photocard',
-    price: 5.00,
-    description: 'Single premium photocard with a warm sunset palette and glossy finish.',
-    category: 'Photocards',
-    images: [
-      'https://picsum.photos/seed/pc2/600/800',
-      'https://picsum.photos/seed/pc2-2/600/800'
+    activities: [
+      { id: 'act-s1', type: 'create', title: 'Python Crawler Created', description: 'Scaffolder set up virtual environments and requirements indices.', timestamp: 'Yesterday' },
+      { id: 'act-s2', type: 'fix', title: 'Bug Identified: Out of Bounds', description: 'Debugger tracked crash site to chunker offset index 42.', timestamp: 'Yesterday', agent: 'Debugger' }
     ],
-    tags: ['friendship', 'K-pop inspired'],
-    isBestseller: false,
-    stockCount: 15,
-    personalizable: false,
-  }
-];
-
-export interface DiaryEntry {
-  id: string;
-  title: string;
-  date: string;
-  image: string;
-  content: string;
-}
-
-export const DIARY_ENTRIES: DiaryEntry[] = [
-  {
-    id: '1',
-    title: 'Dyeing threads with tea',
-    date: 'Oct 12, 2023',
-    image: 'https://picsum.photos/seed/diary1/400/500',
-    content: 'A peaceful afternoon spent turning bright white cotton into vintage-inspired cream threads using black tea baths...'
-  },
-  {
-    id: '2',
-    title: 'How to tie a bracelet on a friend',
-    date: 'Nov 05, 2023',
-    image: 'https://picsum.photos/seed/diary2/400/500',
-    content: 'The secret is in the double-knot and the wish you make together. Here is my favorite way to secure a charm...'
-  },
-  {
-    id: '3',
-    title: 'Photocard storage ideas',
-    date: 'Dec 01, 2023',
-    image: 'https://picsum.photos/seed/diary3/400/500',
-    content: 'Organizing your collection can be as dreamy as the cards themselves. I love using lace-trimmed binders...'
+    deployments: [
+      { id: 'd-s1', environment: 'Development', status: 'Successful', version: 'v0.1.2', timestamp: 'Yesterday', commitMessage: 'Resolve splitter calculation crashes' }
+    ]
   }
 ];

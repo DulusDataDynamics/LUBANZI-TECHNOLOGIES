@@ -4,67 +4,40 @@
 
 @layer base {
   :root {
-    /* Background: Off-white/cream (#FEF7E8) */
-    --background: 40 85% 95%;
-    --foreground: 0 0% 17%;
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
     
-    --card: 40 85% 97%;
-    --card-foreground: 0 0% 17%;
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
     
-    --popover: 40 85% 97%;
-    --popover-foreground: 0 0% 17%;
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
     
-    /* Primary: Dusty rose (#E8B4B8) */
-    --primary: 355 51% 81%;
-    --primary-foreground: 0 0% 17%;
+    --primary: 263.4 70% 50.4%;
+    --primary-foreground: 210 20% 98%;
     
-    /* Secondary: Faded lavender (#C5B4E3) */
-    --secondary: 262 44% 80%;
-    --secondary-foreground: 0 0% 17%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
     
-    --muted: 40 30% 90%;
-    --muted-foreground: 0 0% 45%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
     
-    /* Accent: Honey gold (#E8C468) */
-    --accent: 43 74% 66%;
-    --accent-foreground: 0 0% 17%;
+    --accent: 217.2 91.2% 59.8%;
+    --accent-foreground: 210 20% 98%;
     
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 20% 98%;
     
-    --border: 40 20% 85%;
-    --input: 40 20% 85%;
-    --ring: 355 51% 81%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 263.4 70% 50.4%;
     
     --radius: 0.75rem;
   }
 
   .dark {
-    /* Dark Mood: Dark Lavender Theme */
-    --background: 262 30% 15%;
-    --foreground: 40 85% 95%;
-    
-    --card: 262 30% 18%;
-    --card-foreground: 40 85% 95%;
-    
-    --popover: 262 30% 18%;
-    --popover-foreground: 40 85% 95%;
-    
-    --primary: 262 44% 70%;
-    --primary-foreground: 262 30% 15%;
-    
-    --secondary: 355 51% 70%;
-    --secondary-foreground: 262 30% 15%;
-    
-    --muted: 262 20% 25%;
-    --muted-foreground: 262 10% 70%;
-    
-    --accent: 43 74% 60%;
-    --accent-foreground: 262 30% 15%;
-    
-    --border: 262 20% 25%;
-    --input: 262 20% 25%;
-    --ring: 262 44% 70%;
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
   }
 }
 
@@ -73,37 +46,21 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground transition-colors duration-500;
+    @apply bg-background text-foreground antialiased font-body selection:bg-primary/30;
   }
   h1, h2, h3, h4, h5, h6 {
-    @apply font-headline;
+    @apply font-headline tracking-tight;
   }
 }
 
-/* Custom Cursor Trail Effect */
-.cursor-trail {
-  pointer-events: none;
-  position: fixed;
-  z-index: 9999;
+.glass-panel {
+  @apply bg-card/50 backdrop-blur-xl border border-border/50 shadow-2xl;
 }
 
-/* Masonry Layout Helpers */
-.masonry-grid {
-  display: flex;
-  margin-left: -1rem; /* gutter size offset */
-  width: auto;
-}
-.masonry-grid_column {
-  padding-left: 1rem; /* gutter size */
-  background-clip: padding-box;
+.terminal-text {
+  @apply font-code text-xs leading-relaxed;
 }
 
-/* Custom selection color */
-::selection {
-  @apply bg-primary/30 text-foreground;
-}
-
-/* Smooth scrolling */
-html {
-  scroll-behavior: smooth;
+.sidebar-gradient {
+  background: linear-gradient(to bottom, transparent, hsl(var(--primary) / 0.05));
 }
