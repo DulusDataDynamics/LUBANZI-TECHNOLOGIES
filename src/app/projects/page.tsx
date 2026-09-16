@@ -1,3 +1,4 @@
+
 "use client"
 
 import React from 'react';
@@ -5,7 +6,6 @@ import Link from 'next/link';
 import { 
   Plus, 
   Search, 
-  MoreVertical,
   Circle
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -14,6 +14,7 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { INITIAL_PROJECTS } from '@/lib/mock-data';
 import { VexaSidebar } from '@/components/layout/sidebar';
+import { NewProjectDialog } from '@/components/projects/new-project-dialog';
 import { cn } from '@/lib/utils';
 
 export default function ProjectsPage() {
@@ -28,9 +29,7 @@ export default function ProjectsPage() {
             <h1 className="text-4xl font-bold tracking-tight mb-2">Projects</h1>
             <p className="text-zinc-500 text-sm">Your development projects, workspaces, and AI engineering environments.</p>
           </div>
-          <Button className="rounded-md bg-white text-black hover:bg-zinc-200 font-semibold px-6">
-            <Plus className="w-4 h-4 mr-2" /> New Project
-          </Button>
+          <NewProjectDialog />
         </header>
 
         <div className="px-8 max-w-7xl mx-auto w-full space-y-8">

@@ -1,42 +1,25 @@
+
 "use client"
 
-import React, { useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import { 
-  Terminal, 
   Code2, 
   Cpu, 
   Layers, 
-  GitBranch, 
-  Activity, 
-  Plus, 
   ChevronRight, 
-  Search,
   Zap,
-  Rocket
+  Plus
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { 
-  Dialog, 
-  DialogContent, 
-  DialogHeader, 
-  DialogTitle, 
-  DialogDescription,
-  DialogFooter,
-  DialogTrigger
-} from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import { INITIAL_PROJECTS } from '@/lib/mock-data';
 import { VexaSidebar } from '@/components/layout/sidebar';
+import { NewProjectDialog } from '@/components/projects/new-project-dialog';
 import { cn } from '@/lib/utils';
 
 export default function VexaDashboard() {
-  const [isNewProjectOpen, setIsNewProjectOpen] = useState(false);
-
   return (
     <div className="flex min-h-screen bg-background">
       <VexaSidebar />
@@ -48,37 +31,7 @@ export default function VexaDashboard() {
             <h1 className="text-4xl font-bold tracking-tight mb-2">Dashboard</h1>
             <p className="text-zinc-500 text-sm">VEXA core systems are active and ready for instructions.</p>
           </div>
-          <div className="flex items-center gap-4">
-            <Dialog open={isNewProjectOpen} onOpenChange={setIsNewProjectOpen}>
-              <DialogTrigger asChild>
-                <Button className="rounded-md bg-white text-black hover:bg-zinc-200 font-semibold px-6">
-                  <Plus className="w-4 h-4 mr-2" /> New Project
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="bg-card border-border text-white">
-                <DialogHeader>
-                  <DialogTitle className="text-xl font-bold">Initialize New Project</DialogTitle>
-                  <DialogDescription className="text-zinc-500">
-                    VEXA will scaffold your project architecture based on your description.
-                  </DialogDescription>
-                </DialogHeader>
-                <div className="space-y-4 py-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="name" className="text-[10px] font-bold uppercase tracking-widest text-zinc-500">Project Name</Label>
-                    <Input id="name" placeholder="e.g. quantum-engine" className="bg-black border-border focus:border-zinc-700" />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="description" className="text-[10px] font-bold uppercase tracking-widest text-zinc-500">Vision & Purpose</Label>
-                    <Textarea id="description" placeholder="Describe what you want to build..." className="bg-black border-border focus:border-zinc-700 min-h-[100px]" />
-                  </div>
-                </div>
-                <DialogFooter>
-                  <Button variant="outline" onClick={() => setIsNewProjectOpen(false)} className="border-border hover:bg-zinc-900">Cancel</Button>
-                  <Button className="bg-white text-black hover:bg-zinc-200" onClick={() => setIsNewProjectOpen(false)}>Create Workspace</Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
-          </div>
+          <NewProjectDialog />
         </header>
 
         <div className="px-8 space-y-10 max-w-7xl mx-auto w-full pb-20">
