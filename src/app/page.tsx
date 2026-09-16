@@ -1,6 +1,6 @@
 "use client"
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { 
   Terminal, 
@@ -13,17 +13,30 @@ import {
   ChevronRight, 
   Search,
   Zap,
-  Box,
   Rocket
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { 
+  Dialog, 
+  DialogContent, 
+  DialogHeader, 
+  DialogTitle, 
+  DialogDescription,
+  DialogFooter,
+  DialogTrigger
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import { INITIAL_PROJECTS } from '@/lib/mock-data';
 import { VexaSidebar } from '@/components/layout/sidebar';
 import { cn } from '@/lib/utils';
 
 export default function VexaDashboard() {
+  const [isNewProjectOpen, setIsNewProjectOpen] = useState(false);
+
   return (
     <div className="flex min-h-screen bg-[#09090b]">
       <VexaSidebar />
@@ -39,9 +52,35 @@ export default function VexaDashboard() {
             />
           </div>
           <div className="flex items-center gap-4">
-            <Button size="sm" className="rounded-full gap-2 shadow-lg shadow-primary/20">
-              <Plus className="w-4 h-4" /> New Project
-            </Button>
+            <Dialog open={isNewProjectOpen} onOpenChange={setIsNewProjectOpen}>
+              <DialogTrigger asChild>
+                <Button size="sm" className="rounded-full gap-2 shadow-lg shadow-primary/20 bg-primary hover:bg-primary/90 text-white border-none">
+                  <Plus className="w-4 h-4" /> New Project
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="bg-zinc-900 border-zinc-800 text-zinc-100">
+                <DialogHeader>
+                  <DialogTitle className="text-xl font-bold">Initialize New Project</DialogTitle>
+                  <DialogDescription className="text-zinc-400">
+                    VEXA will scaffold your project architecture based on your description.
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="space-y-4 py-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="name" className="text-xs font-bold uppercase tracking-widest text-zinc-500">Project Name</Label>
+                    <Input id="name" placeholder="e.g. quantum-engine" className="bg-zinc-950 border-zinc-800 focus:border-primary/50" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="description" className="text-xs font-bold uppercase tracking-widest text-zinc-500">Vision & Purpose</Label>
+                    <Textarea id="description" placeholder="Describe what you want to build..." className="bg-zinc-950 border-zinc-800 focus:border-primary/50 min-h-[100px]" />
+                  </div>
+                </div>
+                <DialogFooter>
+                  <Button variant="outline" onClick={() => setIsNewProjectOpen(false)} className="border-zinc-800 hover:bg-zinc-800">Cancel</Button>
+                  <Button className="bg-primary hover:bg-primary/90" onClick={() => setIsNewProjectOpen(false)}>Create Workspace</Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
           </div>
         </header>
 
@@ -73,7 +112,7 @@ export default function VexaDashboard() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {INITIAL_PROJECTS.map(project => (
                 <Link key={project.id} href={`/workspace/${project.id}`}>
-                  <Card className="glass-panel group hover:border-primary/40 transition-all duration-500 cursor-pointer h-full">
+                  <Card className="glass-panel group hover:border-primary/40 transition-all duration-500 cursor-pointer h-full border-zinc-800/50 bg-zinc-900/30">
                     <CardHeader>
                       <div className="flex items-center justify-between mb-3">
                         <Badge variant="outline" className={cn(
@@ -108,7 +147,7 @@ export default function VexaDashboard() {
             <h2 className="text-xl font-bold flex items-center gap-3">
               <Terminal className="w-5 h-5 text-accent" /> System activity
             </h2>
-            <Card className="glass-panel overflow-hidden border-none">
+            <Card className="glass-panel overflow-hidden border-zinc-800/50 bg-zinc-900/20">
               <CardContent className="p-0">
                 <div className="divide-y divide-zinc-800/30">
                   {INITIAL_PROJECTS[0].activities.map(activity => (
@@ -152,7 +191,7 @@ export default function VexaDashboard() {
 
 function StatCard({ icon, label, value, sub }: { icon: React.ReactNode, label: string, value: string, sub: string }) {
   return (
-    <Card className="glass-panel hover:bg-zinc-800/30 transition-colors border-none group">
+    <Card className="glass-panel hover:bg-zinc-800/30 transition-colors border-zinc-800/50 bg-zinc-900/40 group">
       <CardContent className="p-6">
         <div className="flex items-center justify-between mb-4">
           <span className="text-xs font-bold uppercase tracking-widest text-zinc-500">{label}</span>
