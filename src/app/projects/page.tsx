@@ -1,7 +1,7 @@
 
 "use client"
 
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { 
   Plus, 
@@ -18,6 +18,15 @@ import { NewProjectDialog } from '@/components/projects/new-project-dialog';
 import { cn } from '@/lib/utils';
 
 export default function ProjectsPage() {
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const filteredProjects = useMemo(() => {
+    return INITIAL_PROJECTS.filter(project => 
+      project.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      project.description.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [searchQuery]);
+
   return (
     <div className="flex min-h-screen bg-background">
       <VexaSidebar />
@@ -36,23 +45,32 @@ export default function ProjectsPage() {
           {/* Search and Stats Area */}
           <div className="flex gap-4 items-stretch">
             <div className="relative flex-1">
+              <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
               <Input 
-                placeholder="Search projects..." 
-                className="bg-card border-border focus:ring-0 focus:border-zinc-700 h-14 pl-6 text-sm rounded-lg"
+                placeholder="Search projects by name or description..." 
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="bg-card border-border focus:ring-0 focus:border-zinc-700 h-14 pl-14 text-sm rounded-lg"
               />
             </div>
             <div className="flex gap-2">
               <StatItem label="Total" value={INITIAL_PROJECTS.length.toString()} />
-              <StatItem label="Active" value="2" />
+              <StatItem label="Matches" value={filteredProjects.length.toString()} />
             </div>
           </div>
 
           {/* Project Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-20">
-            {INITIAL_PROJECTS.map(project => (
-              <ProjectCard key={project.id} project={project} />
-            ))}
-          </div>
+          {filteredProjects.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-20">
+              {filteredProjects.map(project => (
+                <ProjectCard key={project.id} project={project} />
+              ))}
+            </div>
+          ) : (
+            <div className="py-20 text-center">
+              <p className="text-zinc-500 text-sm">No projects found matching your search.</p>
+            </div>
+          )}
         </div>
       </main>
     </div>

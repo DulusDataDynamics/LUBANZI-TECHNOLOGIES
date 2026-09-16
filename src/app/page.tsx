@@ -39,7 +39,7 @@ export default function VexaDashboard() {
           <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <StatCard icon={<Cpu className="text-emerald-500 w-4 h-4" />} label="Active Agents" value="5/5" sub="Ready for tasks" />
             <StatCard icon={<Code2 className="text-white w-4 h-4" />} label="Code Changes" value="1,284" sub="+12% this week" />
-            <StatCard icon={<Zap className="text-amber-500 w-4 h-4" />} label="Intelligence" value="Gemini 2.5" sub="Flash model active" />
+            <StatCard icon={<Zap className="text-amber-500 w-4 h-4" />} label="Intelligence" value="VEXA V1.4.0" sub="Flash model active" />
           </section>
 
           {/* Recent Projects */}

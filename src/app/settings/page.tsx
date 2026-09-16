@@ -1,3 +1,4 @@
+
 "use client"
 
 import React from 'react';
@@ -23,14 +24,14 @@ export default function SettingsPage() {
     <div className="flex min-h-screen bg-[#09090b]">
       <VexaSidebar />
 
-      <main className="flex-1 lg:ml-64 flex flex-col">
-        <header className="h-16 border-b border-zinc-800/50 flex items-center justify-between px-8 bg-[#09090b]/80 backdrop-blur-md sticky top-0 z-40">
+      <main className="flex-1 lg:ml-64 flex flex-col h-screen overflow-y-auto">
+        <header className="h-16 border-b border-zinc-800/50 flex items-center justify-between px-8 bg-[#09090b]/80 backdrop-blur-md sticky top-0 z-40 shrink-0">
           <h2 className="text-xl font-bold flex items-center gap-3">
             <Settings className="w-5 h-5 text-primary" /> Workspace Settings
           </h2>
         </header>
 
-        <div className="p-8 max-w-4xl mx-auto w-full space-y-10">
+        <div className="p-8 max-w-4xl mx-auto w-full space-y-10 pb-20">
           {/* Profile Section */}
           <section className="space-y-6">
             <h3 className="text-sm font-bold uppercase tracking-widest text-zinc-500">Account</h3>
@@ -46,7 +47,7 @@ export default function SettingsPage() {
                       <p className="text-sm text-zinc-500">Senior Systems Architect</p>
                     </div>
                   </div>
-                  <Button variant="outline" className="border-zinc-800">Edit Profile</Button>
+                  <Button variant="outline" className="border-zinc-800 bg-zinc-900 hover:bg-zinc-800">Edit Profile</Button>
                 </div>
               </CardContent>
             </Card>
@@ -56,18 +57,17 @@ export default function SettingsPage() {
           <section className="space-y-6">
              <div className="flex items-center justify-between">
               <h3 className="text-sm font-bold uppercase tracking-widest text-zinc-500">Intelligence Layers</h3>
-              <Badge className="bg-primary/20 text-primary border-none">Pro Plan</Badge>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <SettingsCard 
                 icon={<Cpu className="w-5 h-5 text-primary" />} 
-                title="Gemini 2.5 Flash" 
+                title="VEXA V1.4.0" 
                 description="Active high-velocity reasoning model."
                 active={true}
               />
               <SettingsCard 
                 icon={<Zap className="w-5 h-5 text-zinc-600" />} 
-                title="Imagen 4.0" 
+                title="Vision Analysis" 
                 description="Asset generation & visual debugging."
                 active={false}
               />
@@ -105,7 +105,7 @@ function SettingsCard({ icon, title, description, active }: { icon: React.ReactN
           <div className="p-2 bg-zinc-950 rounded-xl border border-zinc-800">
             {icon}
           </div>
-          {active && <Badge className="bg-primary text-[9px]">ACTIVE</Badge>}
+          {active && <Badge className="bg-primary text-[9px] text-primary-foreground border-none">ACTIVE</Badge>}
         </div>
         <h4 className="font-bold mb-1">{title}</h4>
         <p className="text-xs text-zinc-500 leading-relaxed">{description}</p>
