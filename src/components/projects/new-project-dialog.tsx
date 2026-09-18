@@ -18,6 +18,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { Plus, Loader2, Sparkles } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useRouter } from 'next/navigation';
+import { useUser, useFirestore } from '@/firebase';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 
 interface NewProjectDialogProps {
   children?: React.ReactNode;
@@ -30,25 +32,59 @@ export function NewProjectDialog({ children }: NewProjectDialogProps) {
   const [description, setDescription] = useState('');
   const { toast } = useToast();
   const router = useRouter();
+  const { user } = useUser();
+  const db = useFirestore();
 
   const handleCreate = async () => {
-    if (!name.trim()) return;
+    if (!name.trim() || !db || !user) return;
 
     setIsInitializing(true);
     
-    // Simulate AI Scaffolding
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    setIsInitializing(false);
-    setIsOpen(false);
-    
-    toast({
-      title: "Project Initialized",
-      description: `${name} has been successfully scaffolded by VEXA.`,
-    });
+    try {
+      // Simulate AI Scaffolding
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      const docRef = await addDoc(collection(db, 'projects'), {
+        name: name,
+        description: description,
+        status: 'Idle',
+        ownerId: user.uid,
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+        memory: {
+          purpose: description,
+          architecture: 'Analyzing...',
+          preferences: 'Standard TypeScript',
+          knownIssues: 'None detected'
+        }
+      });
 
-    // In a real app, this would redirect to the new project ID
-    router.push('/workspace/vexa-core');
+      // Add initial activity
+      await addDoc(collection(db, 'projects', docRef.id, 'activities'), {
+        type: 'create',
+        title: 'Project Initialized',
+        description: `${name} has been successfully scaffolded by VEXA V1.4.0.`,
+        timestamp: new Date().toISOString(),
+        agent: 'Planner'
+      });
+      
+      setIsInitializing(false);
+      setIsOpen(false);
+      
+      toast({
+        title: "Project Initialized",
+        description: `${name} is ready for instructions.`,
+      });
+
+      router.push(`/workspace/${docRef.id}`);
+    } catch (e) {
+      toast({
+        variant: "destructive",
+        title: "Scaffolding Failed",
+        description: "VEXA encountered a grid sync error.",
+      });
+      setIsInitializing(false);
+    }
   };
 
   return (
@@ -86,7 +122,7 @@ export function NewProjectDialog({ children }: NewProjectDialogProps) {
               id="description" 
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Describe what you want to build... (e.g. A real-time data visualizer with Next.js)" 
+              placeholder="Describe what you want to build..." 
               className="bg-black border-border focus:border-zinc-700 min-h-[120px] resize-none" 
             />
           </div>

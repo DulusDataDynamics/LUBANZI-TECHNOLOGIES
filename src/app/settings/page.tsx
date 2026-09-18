@@ -1,7 +1,7 @@
 
 "use client"
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Settings, 
   User, 
@@ -11,32 +11,76 @@ import {
   Bell,
   ChevronRight,
   Zap,
-  Lock
+  Lock,
+  Loader2
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { VexaSidebar } from '@/components/layout/sidebar';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { useSidebar } from '@/components/layout/sidebar-context';
+import { useUser, useFirestore, useDoc } from '@/firebase';
+import { doc, updateDoc, setDoc } from 'firebase/firestore';
 
 export default function SettingsPage() {
   const { toast } = useToast();
-  const [activeLayer, setActiveLayer] = useState<'vexa' | 'vision'>('vexa');
   const { isCollapsed } = useSidebar();
+  const { user, loading: authLoading } = useUser();
+  const db = useFirestore();
+
+  const [activeLayer, setActiveLayer] = useState<'vexa' | 'vision'>('vexa');
+  const [isEditing, setIsEditing] = useState(false);
+  const [displayName, setDisplayName] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
+
+  const userDocRef = React.useMemo(() => {
+    return db && user ? doc(db, 'users', user.uid) : null;
+  }, [db, user]);
+
+  const { data: userProfile } = useDoc(userDocRef);
+
+  useEffect(() => {
+    if (userProfile) {
+      setDisplayName(userProfile.displayName || '');
+    } else if (user) {
+      setDisplayName(user.displayName || '');
+    }
+  }, [userProfile, user]);
+
+  const handleSaveProfile = async () => {
+    if (!userDocRef || !displayName.trim()) return;
+    setIsSaving(true);
+    try {
+      await setDoc(userDocRef, {
+        displayName: displayName,
+        email: user?.email,
+        updatedAt: new Date().toISOString()
+      }, { merge: true });
+      
+      setIsEditing(false);
+      toast({
+        title: "Profile Updated",
+        description: "Your changes have been saved to the VEXA grid.",
+      });
+    } catch (e) {
+      toast({
+        variant: "destructive",
+        title: "Update Failed",
+        description: "Could not sync changes to the cloud.",
+      });
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   const handlePreferenceClick = (label: string) => {
     toast({
       title: `${label} Accessed`,
       description: `VEXA is retrieving your ${label.toLowerCase()} configuration...`,
-    });
-  };
-
-  const handleEditProfile = () => {
-    toast({
-      title: "Profile Editor",
-      description: "Profile modification is currently in read-only mode for this workspace.",
     });
   };
 
@@ -47,6 +91,14 @@ export default function SettingsPage() {
       description: `Now using ${layer === 'vexa' ? 'VEXA V1.4.0' : 'Vision Analysis'} as the primary reasoning engine.`,
     });
   };
+
+  if (authLoading) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-[#09090b]">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-screen bg-[#09090b]">
@@ -69,22 +121,45 @@ export default function SettingsPage() {
             <Card className="bg-zinc-900/40 border-zinc-800/50">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-4 flex-1">
                     <div className="w-16 h-16 rounded-2xl bg-primary/20 flex items-center justify-center text-primary font-bold text-xl border border-primary/20">
-                      JD
+                      {displayName?.charAt(0) || 'V'}
                     </div>
-                    <div>
-                      <h4 className="text-lg font-bold">John Doe</h4>
-                      <p className="text-sm text-zinc-500">Senior Systems Architect</p>
-                    </div>
+                    {isEditing ? (
+                      <div className="space-y-2 flex-1 max-w-sm">
+                        <Label htmlFor="displayName" className="text-xs text-zinc-500">Full Name</Label>
+                        <Input 
+                          id="displayName"
+                          value={displayName}
+                          onChange={(e) => setDisplayName(e.target.value)}
+                          className="bg-zinc-950 border-zinc-800 h-9"
+                        />
+                      </div>
+                    ) : (
+                      <div>
+                        <h4 className="text-lg font-bold">{displayName || 'Anonymous Engineer'}</h4>
+                        <p className="text-sm text-zinc-500">{userProfile?.role || 'Systems Architect'}</p>
+                      </div>
+                    )}
                   </div>
-                  <Button 
-                    variant="outline" 
-                    onClick={handleEditProfile}
-                    className="border-zinc-800 bg-zinc-900 hover:bg-zinc-800"
-                  >
-                    Edit Profile
-                  </Button>
+                  <div className="flex gap-2">
+                    {isEditing ? (
+                      <>
+                        <Button variant="ghost" size="sm" onClick={() => setIsEditing(false)} className="text-zinc-500">Cancel</Button>
+                        <Button size="sm" onClick={handleSaveProfile} disabled={isSaving} className="bg-white text-black hover:bg-zinc-200">
+                          {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Save'}
+                        </Button>
+                      </>
+                    ) : (
+                      <Button 
+                        variant="outline" 
+                        onClick={() => setIsEditing(true)}
+                        className="border-zinc-800 bg-zinc-900 hover:bg-zinc-800"
+                      >
+                        Edit Profile
+                      </Button>
+                    )}
+                  </div>
                 </div>
               </CardContent>
             </Card>

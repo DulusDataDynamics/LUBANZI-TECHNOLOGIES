@@ -6,28 +6,52 @@ import Link from 'next/link';
 import { 
   Plus, 
   Search, 
-  Circle
+  Circle,
+  Loader2
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { INITIAL_PROJECTS } from '@/lib/mock-data';
 import { VexaSidebar } from '@/components/layout/sidebar';
 import { NewProjectDialog } from '@/components/projects/new-project-dialog';
 import { cn } from '@/lib/utils';
 import { useSidebar } from '@/components/layout/sidebar-context';
+import { useCollection, useUser, useFirestore } from '@/firebase';
+import { collection, query, where, orderBy } from 'firebase/firestore';
 
 export default function ProjectsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const { isCollapsed } = useSidebar();
+  const { user, loading: authLoading } = useUser();
+  const db = useFirestore();
+
+  const projectsQuery = useMemo(() => {
+    if (!db || !user) return null;
+    return query(
+      collection(db, 'projects'),
+      where('ownerId', '==', user.uid),
+      orderBy('createdAt', 'desc')
+    );
+  }, [db, user]);
+
+  const { data: projects, loading: projectsLoading } = useCollection(projectsQuery);
 
   const filteredProjects = useMemo(() => {
-    return INITIAL_PROJECTS.filter(project => 
+    if (!projects) return [];
+    return projects.filter(project => 
       project.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      project.description.toLowerCase().includes(searchQuery.toLowerCase())
+      project.description?.toLowerCase().includes(searchQuery.toLowerCase())
     );
-  }, [searchQuery]);
+  }, [projects, searchQuery]);
+
+  if (authLoading) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-[#09090b]">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-screen bg-background">
@@ -59,20 +83,24 @@ export default function ProjectsPage() {
               />
             </div>
             <div className="flex gap-2">
-              <StatItem label="Total" value={INITIAL_PROJECTS.length.toString()} />
+              <StatItem label="Total" value={(projects?.length || 0).toString()} />
               <StatItem label="Matches" value={filteredProjects.length.toString()} />
             </div>
           </div>
 
           {/* Project Grid */}
-          {filteredProjects.length > 0 ? (
+          {projectsLoading ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[1, 2, 3].map(i => <div key={i} className="h-56 rounded-lg bg-zinc-900 animate-pulse" />)}
+            </div>
+          ) : filteredProjects.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-20">
               {filteredProjects.map(project => (
                 <ProjectCard key={project.id} project={project} />
               ))}
             </div>
           ) : (
-            <div className="py-20 text-center">
+            <div className="py-20 text-center border border-zinc-800 border-dashed rounded-xl">
               <p className="text-zinc-500 text-sm">No projects found matching your search.</p>
             </div>
           )}
@@ -92,7 +120,7 @@ function StatItem({ label, value }: { label: string, value: string }) {
 }
 
 function ProjectCard({ project }: { project: any }) {
-  const isActive = project.status !== 'Idle';
+  const isActive = project.status !== 'Idle' && project.status;
   
   return (
     <Card className="bg-card border-border hover:border-zinc-700 transition-all group relative overflow-hidden flex flex-col h-full">
@@ -104,7 +132,7 @@ function ProjectCard({ project }: { project: any }) {
           <div className="flex items-center gap-2">
             <Circle className={cn("w-2 h-2 fill-current", isActive ? "text-emerald-500" : "text-zinc-600")} />
             <span className={cn("text-[10px] font-bold uppercase tracking-widest", isActive ? "text-emerald-500" : "text-zinc-500")}>
-              {isActive ? 'Active' : 'Archived'}
+              {project.status || 'Idle'}
             </span>
           </div>
         </div>
@@ -116,8 +144,8 @@ function ProjectCard({ project }: { project: any }) {
 
         <div className="pt-6 border-t border-zinc-900 flex items-center justify-between mt-auto">
           <div className="space-y-1">
-            <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-tighter">Next.js</p>
-            <p className="text-[9px] text-zinc-600 font-medium">Updated Just now</p>
+            <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-tighter">Repository</p>
+            <p className="text-[9px] text-zinc-600 font-medium">Updated recently</p>
           </div>
           <div className="flex items-center gap-2">
             <Link href={`/workspace/${project.id}`}>
@@ -125,11 +153,6 @@ function ProjectCard({ project }: { project: any }) {
                 Open
               </Button>
             </Link>
-            {isActive && (
-              <Button variant="ghost" size="sm" className="text-zinc-600 hover:text-zinc-400 text-[10px] font-bold uppercase tracking-widest px-4 h-8">
-                Archive
-              </Button>
-            )}
           </div>
         </div>
       </CardContent>

@@ -1,0 +1,107 @@
+
+{
+  "entities": {
+    "UserProfile": {
+      "title": "User Profile",
+      "description": "Information about a VEXA user.",
+      "type": "object",
+      "properties": {
+        "displayName": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "role": { "type": "string" },
+        "avatarUrl": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["displayName", "email"]
+    },
+    "Project": {
+      "title": "VEXA Project",
+      "description": "A software engineering project managed by VEXA.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "status": { 
+          "type": "string", 
+          "enum": ["Idle", "Thinking", "Coding", "Reviewing", "Deploying"] 
+        },
+        "ownerId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" },
+        "memory": {
+          "type": "object",
+          "properties": {
+            "purpose": { "type": "string" },
+            "architecture": { "type": "string" },
+            "preferences": { "type": "string" },
+            "knownIssues": { "type": "string" }
+          }
+        }
+      },
+      "required": ["name", "ownerId"]
+    },
+    "ActivityLog": {
+      "title": "Activity Log",
+      "description": "A record of an agent action or system event.",
+      "type": "object",
+      "properties": {
+        "type": { "type": "string", "enum": ["create", "task", "fix", "review", "deploy"] },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "agent": { "type": "string", "enum": ["Coder", "Debugger", "Planner", "Reviewer", "Deployer"] }
+      },
+      "required": ["type", "title", "timestamp"]
+    },
+    "Deployment": {
+      "title": "Deployment",
+      "description": "A record of a project deployment.",
+      "type": "object",
+      "properties": {
+        "environment": { "type": "string", "enum": ["Development", "Preview", "Production"] },
+        "status": { "type": "string", "enum": ["Successful", "Building", "Failed"] },
+        "version": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "commitMessage": { "type": "string" }
+      },
+      "required": ["environment", "status", "version"]
+    },
+    "ProjectFile": {
+      "title": "Project File",
+      "description": "Source code content for a project.",
+      "type": "object",
+      "properties": {
+        "path": { "type": "string" },
+        "name": { "type": "string" },
+        "content": { "type": "string" },
+        "language": { "type": "string" }
+      },
+      "required": ["path", "name", "content"]
+    }
+  },
+  "auth": {
+    "providers": ["google.com", "password"]
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "Individual user profile documents."
+    },
+    "/projects/{projectId}": {
+      "schema": "Project",
+      "description": "Main project documents."
+    },
+    "/projects/{projectId}/activities/{activityId}": {
+      "schema": "ActivityLog",
+      "description": "Activity logs for a specific project."
+    },
+    "/projects/{projectId}/deployments/{deploymentId}": {
+      "schema": "Deployment",
+      "description": "Deployment history for a specific project."
+    },
+    "/projects/{projectId}/files/{fileId}": {
+      "schema": "ProjectFile",
+      "description": "Individual files within a project codebase."
+    }
+  }
+}
