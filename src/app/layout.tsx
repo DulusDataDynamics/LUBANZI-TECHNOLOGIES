@@ -4,6 +4,7 @@ import './globals.css';
 import { ThemeProvider } from '@/components/theme-provider';
 import { Toaster } from '@/components/ui/toaster';
 import { SidebarProvider } from '@/components/layout/sidebar-context';
+import { FirebaseClientProvider } from '@/firebase';
 
 export const metadata: Metadata = {
   title: "VEXA | AI Software Engineering Agent",
@@ -24,10 +25,12 @@ export default function RootLayout({
       </head>
       <body className="font-body bg-[#09090b] text-zinc-100 antialiased selection:bg-primary/30">
         <ThemeProvider attribute="class" defaultTheme="dark" forcedTheme="dark">
-          <SidebarProvider>
-            {children}
-            <Toaster />
-          </SidebarProvider>
+          <FirebaseClientProvider>
+            <SidebarProvider>
+              {children}
+              <Toaster />
+            </SidebarProvider>
+          </FirebaseClientProvider>
         </ThemeProvider>
       </body>
     </html>
