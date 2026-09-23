@@ -1,6 +1,7 @@
+
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { 
   Shield, 
@@ -9,20 +10,29 @@ import {
   CheckCircle2, 
   Smartphone, 
   Tv, 
-  Zap, 
   Phone, 
   Mail, 
   MessageCircle, 
   Menu, 
   X, 
-  HardDrive, 
-  Info,
-  Sparkles
+  ArrowRight,
+  ExternalLink,
+  ChevronRight,
+  Play
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { cn } from '@/lib/utils';
 
 export default function LubanziTechnologiesHome() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 50);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const scrollToSection = (id: string) => {
     setMobileMenuOpen(false);
@@ -32,52 +42,62 @@ export default function LubanziTechnologiesHome() {
     }
   };
 
+  const Logo = () => (
+    <div 
+      onClick={() => scrollToSection('home')} 
+      className="flex items-center gap-3 cursor-pointer group"
+    >
+      <div className="relative">
+        <div className="w-10 h-10 rounded-xl bg-cyan-500 flex items-center justify-center text-zinc-950 shadow-lg shadow-cyan-500/20 group-hover:scale-105 transition-transform">
+          <Shield className="w-6 h-6 stroke-[2.5]" />
+        </div>
+        <div className="absolute -inset-1 border border-cyan-500/20 rounded-xl animate-pulse" />
+      </div>
+      <div>
+        <span className="font-black text-xl tracking-tight text-white block group-hover:text-cyan-400 transition-colors">
+          LUBANZI
+        </span>
+        <span className="text-[9px] uppercase font-bold tracking-[0.3em] text-cyan-400 block -mt-1 leading-none">
+          TECHNOLOGIES
+        </span>
+      </div>
+    </div>
+  );
+
   return (
     <div className="min-h-screen bg-[#020617] text-zinc-100 font-sans selection:bg-cyan-500/20 antialiased overflow-x-hidden">
       
       {/* 1. NAVIGATION BAR */}
-      <header className="sticky top-0 z-50 w-full bg-[#020617]/90 backdrop-blur-md border-b border-zinc-800/80 transition-all">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      <header className={cn(
+        "fixed top-0 z-50 w-full transition-all duration-300",
+        scrolled ? "h-16 bg-[#020617]/80 backdrop-blur-xl border-b border-zinc-800/80" : "h-20 bg-transparent"
+      )}>
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center justify-between">
           
-          <div 
-            onClick={() => scrollToSection('home')} 
-            className="flex items-center gap-3 cursor-pointer group"
-          >
-            <div className="w-10 h-10 rounded-lg bg-cyan-500 flex items-center justify-center text-zinc-950 shadow-lg shadow-cyan-500/20 group-hover:scale-105 transition-transform">
-              <Shield className="w-6 h-6 stroke-[2.5]" />
-            </div>
-            <div>
-              <span className="font-extrabold text-xl tracking-tight text-white block group-hover:text-cyan-400 transition-colors">
-                LUBANZI
-              </span>
-              <span className="text-[10px] uppercase font-bold tracking-[0.25em] text-cyan-400 block -mt-1">
-                TECHNOLOGIES
-              </span>
-            </div>
-          </div>
+          <Logo />
 
           {/* Desktop Nav links */}
-          <nav className="hidden lg:flex items-center gap-8 text-sm font-medium text-zinc-400">
+          <nav className="hidden lg:flex items-center gap-8 text-xs font-bold uppercase tracking-wider text-zinc-400">
             <button onClick={() => scrollToSection('home')} className="hover:text-cyan-400 transition-colors">Home</button>
             <button onClick={() => scrollToSection('services')} className="hover:text-cyan-400 transition-colors">Services</button>
-            <button onClick={() => scrollToSection('solutions')} className="hover:text-cyan-400 transition-colors">CCTV Solutions</button>
+            <button onClick={() => scrollToSection('solutions')} className="hover:text-cyan-400 transition-colors">Solutions</button>
             <button onClick={() => scrollToSection('about')} className="hover:text-cyan-400 transition-colors">About</button>
-            <button onClick={() => scrollToSection('contact')} className="hover:text-cyan-400 transition-colors">Contact</button>
+            <button onClick={() => scrollToSection('contact')} className="hover:text-cyan-400 transition-colors text-cyan-400">Contact</button>
           </nav>
 
           <div className="hidden lg:flex items-center gap-4">
             <Button 
               onClick={() => scrollToSection('contact')}
-              className="bg-cyan-500 text-zinc-950 font-bold hover:bg-cyan-400 rounded-full px-6 shadow-md shadow-cyan-500/10 transition-all text-xs uppercase tracking-wider"
+              className="bg-cyan-500 text-zinc-950 font-black hover:bg-cyan-400 rounded-full px-8 shadow-xl shadow-cyan-500/20 transition-all text-xs uppercase tracking-widest border-none h-10"
             >
-              Contact Us
+              Get a Quote
             </Button>
           </div>
 
           {/* Mobile hamburger icon */}
           <button 
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden p-2 rounded-lg border border-zinc-800 bg-zinc-900/50 text-zinc-400 hover:text-white transition-colors"
+            className="lg:hidden p-2 rounded-xl border border-zinc-800 bg-zinc-900/50 text-zinc-400 hover:text-white transition-colors"
           >
             {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
@@ -86,28 +106,28 @@ export default function LubanziTechnologiesHome() {
 
       {/* Mobile drawer layout */}
       {mobileMenuOpen && (
-        <div className="fixed inset-0 top-20 z-40 bg-[#020617]/98 backdrop-blur-lg lg:hidden transition-all animate-in fade-in duration-200">
-          <div className="flex flex-col p-6 space-y-6 text-lg font-semibold border-t border-zinc-800/60">
-            <button onClick={() => scrollToSection('home')} className="text-left py-2 border-b border-zinc-900 text-zinc-300 hover:text-cyan-400">Home</button>
-            <button onClick={() => scrollToSection('services')} className="text-left py-2 border-b border-zinc-900 text-zinc-300 hover:text-cyan-400">Services</button>
-            <button onClick={() => scrollToSection('solutions')} className="text-left py-2 border-b border-zinc-900 text-zinc-300 hover:text-cyan-400">CCTV Solutions</button>
-            <button onClick={() => scrollToSection('about')} className="text-left py-2 border-b border-zinc-900 text-zinc-300 hover:text-cyan-400">About</button>
-            <button onClick={() => scrollToSection('contact')} className="text-left py-2 border-b border-zinc-900 text-zinc-300 hover:text-cyan-400">Contact</button>
+        <div className="fixed inset-0 z-40 bg-[#020617]/98 backdrop-blur-xl lg:hidden transition-all animate-in fade-in duration-300">
+          <div className="flex flex-col p-8 pt-24 space-y-6 text-xl font-black uppercase tracking-widest border-t border-zinc-800/60">
+            <button onClick={() => scrollToSection('home')} className="text-left py-4 border-b border-zinc-900 text-zinc-300">Home</button>
+            <button onClick={() => scrollToSection('services')} className="text-left py-4 border-b border-zinc-900 text-zinc-300">Services</button>
+            <button onClick={() => scrollToSection('solutions')} className="text-left py-4 border-b border-zinc-900 text-zinc-300">Solutions</button>
+            <button onClick={() => scrollToSection('about')} className="text-left py-4 border-b border-zinc-900 text-zinc-300">About</button>
+            <button onClick={() => scrollToSection('contact')} className="text-left py-4 border-b border-zinc-900 text-cyan-400">Contact</button>
             
-            <div className="pt-4 flex flex-col gap-3">
+            <div className="pt-8 flex flex-col gap-4">
               <Button 
                 onClick={() => scrollToSection('contact')}
-                className="w-full bg-cyan-500 text-zinc-950 font-bold hover:bg-cyan-400 h-12 rounded-xl"
+                className="w-full bg-cyan-500 text-zinc-950 font-black hover:bg-cyan-400 h-14 rounded-2xl text-sm"
               >
-                Get In Touch
+                REQUEST QUOTE
               </Button>
               <a 
                 href="https://wa.me/27746417112"
                 target="_blank"
                 rel="noreferrer"
-                className="w-full flex items-center justify-center gap-2 border border-zinc-800 bg-zinc-900/40 text-white font-bold h-12 rounded-xl"
+                className="w-full flex items-center justify-center gap-3 border-2 border-zinc-800 bg-zinc-900/40 text-white font-black h-14 rounded-2xl text-sm"
               >
-                <MessageCircle className="w-5 h-5 text-emerald-400" /> WhatsApp Us
+                <MessageCircle className="w-5 h-5 text-cyan-400 fill-cyan-400/10" /> WHATSAPP
               </a>
             </div>
           </div>
@@ -115,65 +135,88 @@ export default function LubanziTechnologiesHome() {
       )}
 
       {/* 2. HERO SECTION */}
-      <section id="home" className="relative security-gradient pt-16 pb-24 lg:pt-24 lg:pb-32 overflow-hidden border-b border-zinc-900">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+      <section id="home" className="relative min-h-[90vh] flex items-center tech-grid pt-24 lg:pt-0 border-b border-zinc-900/50">
+        <div className="absolute inset-0 hero-glow pointer-events-none" />
+        
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
             
-            <div className="lg:col-span-7 space-y-6 max-w-2xl">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-xs font-bold uppercase tracking-wider">
-                <Cctv className="w-3.5 h-3.5" /> SECURITY TODAY • PEACE OF MIND TOMORROW
+            <div className="lg:col-span-6 space-y-8">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-[10px] font-black uppercase tracking-[0.2em] animate-in slide-in-from-left duration-700">
+                <div className="w-2 h-2 rounded-full bg-cyan-500 animate-pulse" />
+                ADVANCED SURVEILLANCE SYSTEMS
               </div>
               
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-tight uppercase">
-                CCTV <span className="text-cyan-400 block sm:inline">INSTALLATION</span>
+              <h1 className="text-5xl sm:text-6xl lg:text-8xl font-black text-white tracking-tighter leading-[0.9] uppercase text-glow animate-in fade-in slide-in-from-bottom duration-700">
+                PROTECT <span className="text-cyan-400">WHAT MATTERS</span> MOST
               </h1>
-              <p className="text-xl font-bold text-zinc-200 tracking-wide">
-                Protect What Matters Most
-              </p>
               
-              <p className="text-base text-zinc-400 leading-relaxed font-normal">
-                We provide professional CCTV installation services for homes, businesses and commercial premises. Keep your property, assets and loved ones safe with our reliable and affordable security solutions.
+              <p className="text-lg text-zinc-400 leading-relaxed font-medium max-w-xl animate-in fade-in duration-1000 delay-200">
+                Professional CCTV installation and smart security solutions for homes, businesses, and industrial complexes across South Africa.
               </p>
 
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-4">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-6 pt-4 animate-in fade-in duration-1000 delay-300">
                 <Button 
                   onClick={() => scrollToSection('contact')}
-                  className="bg-cyan-500 text-zinc-950 font-bold hover:bg-cyan-400 h-12 px-8 rounded-full shadow-lg text-sm uppercase tracking-wider"
+                  className="bg-cyan-500 text-zinc-950 font-black hover:bg-cyan-400 h-16 px-10 rounded-full shadow-2xl shadow-cyan-500/30 text-sm uppercase tracking-widest group"
                 >
-                  Contact Now
+                  Request a Quote <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
                 </Button>
                 
                 <a 
                   href="https://wa.me/27746417112"
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex items-center justify-center gap-2 border border-zinc-800 bg-zinc-900/50 hover:bg-zinc-800 text-zinc-100 font-bold h-12 px-8 rounded-full transition-colors text-sm"
+                  className="inline-flex items-center justify-center gap-3 border-2 border-zinc-800 bg-zinc-900/50 hover:bg-zinc-800/80 text-zinc-100 font-black h-16 px-10 rounded-full transition-all text-sm uppercase tracking-widest group"
                 >
-                  <MessageCircle className="w-4 h-4 text-emerald-400 fill-emerald-400/20" /> WhatsApp Us
+                  <MessageCircle className="w-5 h-5 text-cyan-400 fill-cyan-400/20 group-hover:scale-110 transition-transform" /> WhatsApp Us
                 </a>
+              </div>
+
+              <div className="grid grid-cols-3 gap-8 pt-8 border-t border-zinc-800/50 max-w-lg">
+                <div>
+                  <p className="text-2xl font-black text-white">4K</p>
+                  <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest">Ultra HD</p>
+                </div>
+                <div>
+                  <p className="text-2xl font-black text-white">24/7</p>
+                  <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest">Monitoring</p>
+                </div>
+                <div>
+                  <p className="text-2xl font-black text-white">LIVE</p>
+                  <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest">Phone Sync</p>
+                </div>
               </div>
             </div>
 
-            <div className="lg:col-span-5 relative w-full aspect-square sm:aspect-[4/3] lg:aspect-square rounded-3xl overflow-hidden border border-zinc-800 shadow-2xl shadow-cyan-500/5">
-              <Image 
-                src="https://picsum.photos/seed/lubanzihero/600/400" 
-                alt="Lubanzi CCTV Camera Setup"
-                fill
-                priority
-                className="object-cover"
-                data-ai-hint="cctv surveillance security"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#020617] via-transparent to-transparent opacity-60" />
-              
-              <div className="absolute bottom-6 left-6 right-6 p-4 rounded-xl bg-zinc-950/90 backdrop-blur-md border border-zinc-800 flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-cyan-500/10 text-cyan-400">
-                  <Eye className="w-5 h-5" />
-                </div>
-                <div>
-                  <p className="text-xs font-bold text-white uppercase tracking-wider">Live Visual Security</p>
-                  <p className="text-[11px] text-zinc-400">Remote smartphone access deployment standard</p>
+            <div className="lg:col-span-6 relative group animate-in zoom-in duration-1000">
+              <div className="relative aspect-[4/5] sm:aspect-square lg:aspect-[4/5] rounded-[2rem] overflow-hidden border border-zinc-800 shadow-2xl">
+                <Image 
+                  src="https://picsum.photos/seed/lubanzi-secure-1/800/1000" 
+                  alt="High-Tech Security Camera"
+                  fill
+                  priority
+                  className="object-cover transition-transform duration-700 group-hover:scale-110"
+                  data-ai-hint="security camera"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#020617] via-[#020617]/20 to-transparent opacity-80" />
+                
+                <div className="absolute bottom-8 left-8 right-8 space-y-4">
+                  <div className="p-6 glass-panel rounded-2xl flex items-center gap-4 animate-float">
+                    <div className="w-12 h-12 rounded-xl bg-cyan-500 text-zinc-950 flex items-center justify-center shadow-lg">
+                      <Cctv className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <p className="text-xs font-black text-white uppercase tracking-widest">AI Detection Active</p>
+                      <p className="text-[10px] text-cyan-400/70 font-bold uppercase">Human & Vehicle Identification</p>
+                    </div>
+                  </div>
                 </div>
               </div>
+
+              {/* Decorative elements */}
+              <div className="absolute -top-6 -right-6 w-32 h-32 bg-cyan-500/10 blur-[60px] rounded-full" />
+              <div className="absolute -bottom-10 -left-10 w-48 h-48 bg-cyan-500/5 blur-[80px] rounded-full" />
             </div>
 
           </div>
@@ -181,261 +224,246 @@ export default function LubanziTechnologiesHome() {
       </section>
 
       {/* 3. SERVICES SECTION */}
-      <section id="services" className="py-24 bg-zinc-950/40 border-b border-zinc-900">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-16">
+      <section id="services" className="py-32 bg-zinc-950/20 relative">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-20">
+            <div className="space-y-4">
+              <Badge className="bg-cyan-500/10 text-cyan-400 hover:bg-cyan-500/10 border-cyan-500/20 px-4 py-1 uppercase tracking-widest text-[10px] font-black">
+                Our Expertise
+              </Badge>
+              <h2 className="text-4xl lg:text-6xl font-black text-white uppercase tracking-tighter">SURVEILLANCE <br /> <span className="text-cyan-400">ECOSYSTEM</span></h2>
+            </div>
+            <p className="text-zinc-500 max-w-md text-sm font-medium leading-relaxed">
+              We deploy industrial-grade hardware with intelligent software integration to ensure zero blind spots in your security perimeter.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            
+            <ServiceCard 
+              icon={<Shield className="w-6 h-6" />}
+              title="RESIDENTIAL"
+              desc="Comprehensive smart home surveillance with full integration for gated communities and estates."
+            />
+
+            <ServiceCard 
+              icon={<Tv className="w-6 h-6" />}
+              title="COMMERCIAL"
+              desc="Multi-node systems for warehouses, retail outlets, and corporate office parks."
+            />
+
+            <ServiceCard 
+              icon={<Cctv className="w-6 h-6" />}
+              title="INSTALLATION"
+              desc="Certified technical deployments with neat, secure cable management and optimized camera angles."
+            />
+
+            <ServiceCard 
+              icon={<Smartphone className="w-6 h-6" />}
+              title="REMOTE VIEWING"
+              desc="Instant smartphone synchronization allowing real-time monitoring from anywhere in the world."
+            />
+
+          </div>
+        </div>
+      </section>
+
+      {/* 4. WHY CHOOSE US - TECH SPECS */}
+      <section className="py-32 border-y border-zinc-900 bg-zinc-900/10">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-20 items-center">
+            
+            <div className="lg:col-span-5 space-y-8">
+              <Badge className="bg-cyan-500/10 text-cyan-400 border-cyan-500/20 font-black tracking-widest text-[10px]">WHY LUBANZI</Badge>
+              <h2 className="text-4xl lg:text-5xl font-black text-white uppercase tracking-tighter">
+                PRECISION <span className="text-cyan-400">ENGINEERING</span> FOR TOTAL PEACE OF MIND
+              </h2>
+              <p className="text-zinc-400 leading-relaxed font-medium">
+                We don't just install cameras; we build active deterrent systems. Our hardware is selected for clarity, reliability, and extreme durability.
+              </p>
+              
+              <ul className="space-y-4 pt-4">
+                {['Certified Technicians', '2-Year Hardware Warranty', 'South African Managed Support'].map((item, i) => (
+                  <li key={i} className="flex items-center gap-3 text-sm font-bold uppercase tracking-widest text-white">
+                    <CheckCircle2 className="w-5 h-5 text-cyan-500" /> {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <TechFeature title="HD QUALITY" desc="4K and 1080p high-definition imagery for precise identification." />
+              <TechFeature title="NIGHT VISION" desc="Infrared and ColorVu technology for 24/7 visibility in total darkness." />
+              <TechFeature title="SMART ALERTS" desc="Intelligent motion detection that sends instant push notifications." />
+              <TechFeature title="WEATHERPROOF" desc="IP67 certified hardware built to withstand harsh African climates." />
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* 5. PROCESS SECTION */}
+      <section className="py-32 relative overflow-hidden">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-20">
           
           <div className="max-w-3xl mx-auto space-y-4">
-            <span className="text-xs uppercase tracking-[0.25em] font-bold text-cyan-400">Expert Integrations</span>
-            <h2 className="text-3xl sm:text-4xl font-black tracking-tight text-white uppercase">Surveillance Matrix</h2>
+            <Badge className="bg-cyan-500/10 text-cyan-400 border-cyan-500/20 font-black tracking-widest text-[10px]">OUR WORKFLOW</Badge>
+            <h2 className="text-4xl lg:text-6xl font-black text-white uppercase tracking-tighter">THE DEPLOYMENT <span className="text-cyan-400">PROCESS</span></h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-left">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 relative">
+            {/* Connecting lines for desktop */}
+            <div className="hidden lg:block absolute top-1/2 left-0 w-full h-px bg-gradient-to-r from-transparent via-zinc-800 to-transparent -z-10" />
             
-            <div className="bg-zinc-900/20 border border-zinc-800/60 p-8 rounded-2xl space-y-4 hover:border-cyan-500/30 transition-all shadow-sm">
-              <div className="w-12 h-12 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center">
-                <Shield className="w-6 h-6" />
-              </div>
-              <h3 className="text-lg font-bold text-white">RESIDENTIAL SECURITY</h3>
-              <p className="text-sm text-zinc-400 leading-relaxed">
-                Keep your home safe with reliable CCTV surveillance and remote viewing.
-              </p>
-            </div>
-
-            <div className="bg-zinc-900/20 border border-zinc-800/60 p-8 rounded-2xl space-y-4 hover:border-cyan-500/30 transition-all shadow-sm">
-              <div className="w-12 h-12 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center">
-                <Tv className="w-6 h-6" />
-              </div>
-              <h3 className="text-lg font-bold text-white">COMMERCIAL SECURITY</h3>
-              <p className="text-sm text-zinc-400 leading-relaxed">
-                Protect your business, staff, property and assets with professional surveillance solutions.
-              </p>
-            </div>
-
-            <div className="bg-zinc-900/20 border border-zinc-800/60 p-8 rounded-2xl space-y-4 hover:border-cyan-500/30 transition-all shadow-sm">
-              <div className="w-12 h-12 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center">
-                <CheckCircle2 className="w-6 h-6" />
-              </div>
-              <h3 className="text-lg font-bold text-white">PROFESSIONAL INSTALLATION</h3>
-              <p className="text-sm text-zinc-400 leading-relaxed">
-                Clean, neat and reliable CCTV installation carried out with attention to detail.
-              </p>
-            </div>
-
-            <div className="bg-zinc-900/20 border border-zinc-800/60 p-8 rounded-2xl space-y-4 hover:border-cyan-500/30 transition-all shadow-sm">
-              <div className="w-12 h-12 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center">
-                <Smartphone className="w-6 h-6" />
-              </div>
-              <h3 className="text-lg font-bold text-white">REMOTE VIEWING & SUPPORT</h3>
-              <p className="text-sm text-zinc-400 leading-relaxed">
-                View from anywhere instantly with micro-second state sync setups on demand.
-              </p>
-            </div>
-
-          </div>
-        </div>
-      </section>
-
-      {/* 4. WHY CHOOSE US SECTION */}
-      <section className="py-24 border-b border-zinc-900 bg-zinc-900/10">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-            
-            <div className="lg:col-span-5 space-y-6">
-              <span className="text-xs uppercase tracking-[0.25em] font-bold text-cyan-400">Precision Engineering</span>
-              <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight uppercase">
-                Technical Highlights
-              </h2>
-              <p className="text-zinc-400 text-sm sm:text-base leading-relaxed">
-                Uncompromising hardware catalog designed to ensure clear identification parameters under extreme environments.
-              </p>
-            </div>
-
-            <div className="lg:col-span-7 grid grid-cols-2 sm:grid-cols-3 gap-4">
-              {[
-                { title: 'HD QUALITY', desc: 'Crystal clear definition vectors.' },
-                { title: 'NIGHT VISION', desc: 'Infrared visibility parameters.' },
-                { title: 'MOTION DETECTION', desc: 'Smart line trip event metrics.' },
-                { title: 'DURABLE', desc: 'Weatherproof certified casings.' },
-                { title: 'LATEST TECH', desc: 'AI human vehicle filters.' },
-                { title: 'PRO DEP', desc: 'Neat secure tracking layouts.' }
-              ].map((item, idx) => (
-                <div key={idx} className="p-4 rounded-xl bg-zinc-900/40 border border-zinc-800/50 space-y-1 text-center">
-                  <h4 className="font-bold text-cyan-400 text-xs tracking-wider">{item.title}</h4>
-                  <p className="text-[11px] text-zinc-500">{item.desc}</p>
-                </div>
-              ))}
-            </div>
-
-          </div>
-        </div>
-      </section>
-
-      {/* 5. CCTV SOLUTIONS SECTION */}
-      <section id="solutions" className="py-24 bg-zinc-950/20 border-b border-zinc-900">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-16">
-          
-          <div className="max-w-2xl mx-auto space-y-4">
-            <span className="text-xs uppercase tracking-[0.25em] font-bold text-cyan-400">Integrated Capabilities</span>
-            <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight uppercase">System Deliverables</h2>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
-              { title: 'Live camera viewing', desc: 'Zero latency monitoring streams configured locally.' },
-              { title: 'Remote smartphone access', desc: 'Check dynamic status indices from iOS and Android platforms.' },
-              { title: 'Day and night surveillance', desc: 'Automatic lux metrics cutout logic changes seamlessly.' },
-              { title: 'Motion detection triggers', desc: 'Smart push alert messaging vectors directly into endpoints.' },
-              { title: 'Continuous Recording', desc: 'Surveillance grade high density cyclical loop drives.' },
-              { title: 'Active property monitoring', desc: 'Deter external risk footprints with high visual presence scores.' }
-            ].map((sol, index) => (
-              <div key={index} className="bg-zinc-900/20 border border-zinc-800/40 p-6 rounded-xl text-left space-y-2">
-                <h4 className="font-bold text-white text-sm flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" /> {sol.title}
-                </h4>
-                <p className="text-xs text-zinc-400 leading-relaxed">{sol.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 6. ABOUT SECTION */}
-      <section id="about" className="py-24 bg-zinc-950 border-b border-zinc-900">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-4xl mx-auto space-y-6 text-center">
-            <span className="text-xs font-bold uppercase tracking-[0.3em] text-cyan-400 block">Identity Parameters</span>
-            <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight uppercase">LUBANZI TECHNOLOGIES</h2>
-            <p className="text-zinc-300 leading-relaxed font-normal text-sm sm:text-base text-left sm:text-center">
-              Presenting LUBANZI TECHNOLOGIES as a professional CCTV installation and security solutions company focused on reliable, affordable and practical security systems. We deliver direct, robust protection grids tailored carefully to secure home coordinates, warehouse grids, and commercial assets.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* 7. PROCESS SECTION */}
-      <section className="py-24 border-b border-zinc-900">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
-          
-          <div className="max-w-3xl mx-auto text-center space-y-4">
-            <span className="text-xs uppercase tracking-[0.25em] font-bold text-cyan-400">Execution Framework</span>
-            <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight uppercase">Installation Journey</h2>
-          </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
-            {[
-              { num: '01', title: 'Consultation' },
-              { num: '02', title: 'Site Assessment' },
-              { num: '03', title: 'System Rec' },
-              { num: '04', title: 'Installation' },
-              { num: '05', title: 'Testing' },
-              { num: '06', title: 'Handover' }
+              { num: '01', title: 'Consultation', desc: 'Detailed requirements analysis.' },
+              { num: '02', title: 'Assessment', desc: 'On-site security grid mapping.' },
+              { num: '03', title: 'Proposal', desc: 'Custom optimized system design.' },
+              { num: '04', title: 'Deployment', desc: 'Clean professional installation.' },
+              { num: '05', title: 'Testing', desc: 'Rigorous signal & angle checks.' },
+              { num: '06', title: 'Handover', desc: 'Client training & app setup.' }
             ].map((step, idx) => (
-              <div key={idx} className="p-4 bg-zinc-900/30 border border-zinc-900 rounded-xl space-y-2 text-center relative group">
-                <span className="block text-xs font-mono font-bold text-cyan-400/60">{step.num}</span>
-                <h4 className="font-bold text-white text-xs uppercase tracking-wider">{step.title}</h4>
+              <div key={idx} className="group p-8 glass-panel rounded-3xl space-y-4 text-left hover:border-cyan-500/50 transition-all duration-500">
+                <span className="text-4xl font-black text-zinc-800 group-hover:text-cyan-500/20 transition-colors duration-500">{step.num}</span>
+                <h4 className="text-lg font-black text-white uppercase tracking-widest">{step.title}</h4>
+                <p className="text-sm text-zinc-500 font-medium">{step.desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* 8. HIGH-IMPACT CONTACT CHANNELS SECTION */}
-      <section id="contact" className="py-24 bg-zinc-950/60 border-b border-zinc-900">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl space-y-12">
-          
-          <div className="text-center space-y-3">
-            <span className="text-xs uppercase tracking-[0.25em] font-bold text-cyan-400 block">Connect Directly</span>
-            <h2 className="text-3xl font-black text-white uppercase tracking-tight">Operational Communication Gateways</h2>
-            <p className="text-zinc-400 text-xs">Reach our security installation technicians through any certified channel below.</p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {/* 6. CONTACT CHANNELS */}
+      <section id="contact" className="py-32 bg-cyan-500 text-zinc-950">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             
-            {/* Call Badge */}
-            <a 
-              href="tel:064550783" 
-              className="flex items-center justify-between p-6 rounded-2xl bg-zinc-900/80 border-2 border-cyan-500/40 hover:border-cyan-400 transition-all group"
-            >
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-xl bg-cyan-500 text-zinc-950 flex items-center justify-center shrink-0 shadow-lg shadow-cyan-500/20">
-                  <Phone className="w-6 h-6 stroke-[2.5]" />
-                </div>
-                <div>
-                  <span className="block text-[10px] text-zinc-500 uppercase font-bold tracking-wider">CALL NOW</span>
-                  <span className="text-lg font-black text-white tracking-wide group-hover:text-cyan-400 transition-colors">
-                    06 455 0783
-                  </span>
-                </div>
-              </div>
-            </a>
+            <div className="space-y-8">
+              <h2 className="text-5xl lg:text-7xl font-black uppercase tracking-tighter leading-none">READY TO <br /> SECURE YOUR <br /> SPACE?</h2>
+              <p className="text-lg font-bold text-zinc-900/70 max-w-sm">
+                Connect directly with our technical team for an immediate security assessment.
+              </p>
+            </div>
 
-            {/* WhatsApp Badge */}
-            <a 
-              href="https://wa.me/27746417112" 
-              target="_blank" 
-              rel="noreferrer" 
-              className="flex items-center justify-between p-6 rounded-2xl bg-zinc-900/80 border-2 border-emerald-500/40 hover:border-emerald-400 transition-all group"
-            >
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-xl bg-emerald-500 text-zinc-950 flex items-center justify-center shrink-0 shadow-lg shadow-emerald-500/20">
-                  <MessageCircle className="w-6 h-6 stroke-[2.5] fill-zinc-950" />
-                </div>
-                <div>
-                  <span className="block text-[10px] text-zinc-500 uppercase font-bold tracking-wider">WHATSAPP</span>
-                  <span className="text-lg font-black text-white tracking-wide group-hover:text-emerald-400 transition-colors">
-                    074 641 7112
-                  </span>
-                </div>
-              </div>
-            </a>
+            <div className="grid grid-cols-1 gap-6">
+              <ContactLink 
+                href="tel:064550783"
+                icon={<Phone className="w-8 h-8" />}
+                label="Direct Line"
+                value="06 455 0783"
+              />
+              <ContactLink 
+                href="https://wa.me/27746417112"
+                icon={<MessageCircle className="w-8 h-8" />}
+                label="WhatsApp"
+                value="074 641 7112"
+              />
+              <ContactLink 
+                href="mailto:CoetzeeLeo82@gmail.com"
+                icon={<Mail className="w-8 h-8" />}
+                label="Email Enquiries"
+                value="CoetzeeLeo82@gmail.com"
+              />
+            </div>
 
           </div>
-
-          {/* Email row identifier */}
-          <div className="p-4 rounded-xl bg-zinc-900/40 border border-zinc-800 flex flex-col sm:flex-row items-center justify-center gap-3 text-sm font-mono text-zinc-300">
-            <Mail className="w-4 h-4 text-cyan-400" />
-            <a href="mailto:CoetzeeLeo82@gmail.com" className="hover:text-cyan-400 hover:underline transition-all">
-              CoetzeeLeo82@gmail.com
-            </a>
-          </div>
-
-          {/* Slogan underline representation */}
-          <div className="pt-6 text-center border-t border-zinc-900">
-            <p className="text-sm font-semibold tracking-widest text-cyan-400 italic">
-              Your Security • Our Priority
-            </p>
-          </div>
-
         </div>
       </section>
 
-      {/* 9. FOOTER */}
-      <footer className="bg-zinc-950 border-t border-zinc-900 py-12 text-zinc-500 text-xs">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-          
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 pb-8 border-b border-zinc-900">
-            <div>
-              <h3 className="font-extrabold text-lg text-white tracking-tight">LUBANZI TECHNOLOGIES</h3>
-              <p className="text-cyan-400 font-medium mt-1">"Security Today • Peace of Mind Tomorrow"</p>
-            </div>
+      {/* 7. FOOTER */}
+      <footer className="bg-[#010410] pt-24 pb-12 border-t border-zinc-900">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-16 mb-20">
             
-            <div className="flex flex-wrap gap-6 text-zinc-400">
-              <button onClick={() => scrollToSection('home')} className="hover:text-cyan-400">Home</button>
-              <button onClick={() => scrollToSection('services')} className="hover:text-cyan-400">Services</button>
-              <button onClick={() => scrollToSection('solutions')} className="hover:text-cyan-400">Solutions</button>
-              <button onClick={() => scrollToSection('about')} className="hover:text-cyan-400">About</button>
-              <button onClick={() => scrollToSection('contact')} className="hover:text-cyan-400">Contact</button>
+            <div className="lg:col-span-2 space-y-8">
+              <Logo />
+              <p className="text-zinc-500 max-w-md font-medium leading-relaxed">
+                Lubanzi Technologies is a premier security integration firm dedicated to providing high-performance surveillance systems across residential and commercial sectors.
+              </p>
+              <p className="text-cyan-400 text-xs font-black uppercase tracking-[0.2em] italic">
+                "Security Today • Peace of Mind Tomorrow"
+              </p>
+            </div>
+
+            <div className="space-y-8">
+              <h4 className="text-xs font-black uppercase tracking-widest text-white">Quick Nav</h4>
+              <ul className="space-y-4 text-sm font-bold text-zinc-500">
+                <li><button onClick={() => scrollToSection('home')} className="hover:text-cyan-400">Home</button></li>
+                <li><button onClick={() => scrollToSection('services')} className="hover:text-cyan-400">Services</button></li>
+                <li><button onClick={() => scrollToSection('solutions')} className="hover:text-cyan-400">Solutions</button></li>
+                <li><button onClick={() => scrollToSection('about')} className="hover:text-cyan-400">About</button></li>
+              </ul>
+            </div>
+
+            <div className="space-y-8">
+              <h4 className="text-xs font-black uppercase tracking-widest text-white">Legal</h4>
+              <ul className="space-y-4 text-sm font-bold text-zinc-500">
+                <li><a href="#" className="hover:text-cyan-400">Privacy Policy</a></li>
+                <li><a href="#" className="hover:text-cyan-400">Terms of Service</a></li>
+                <li><a href="#" className="hover:text-cyan-400">Warranty Details</a></li>
+              </ul>
+            </div>
+
+          </div>
+
+          <div className="pt-12 border-t border-zinc-900 flex flex-col md:flex-row justify-between items-center gap-6">
+            <p className="text-[10px] text-zinc-600 font-bold uppercase tracking-widest">
+              © 2024 LUBANZI TECHNOLOGIES. ALL RIGHTS RESERVED.
+            </p>
+            <div className="flex items-center gap-6">
+              <span className="text-[10px] text-zinc-600 font-bold uppercase tracking-widest italic">Your Security • Our Priority</span>
             </div>
           </div>
-
-          <div className="flex flex-col sm:flex-row justify-between items-center gap-4 text-zinc-600 text-[11px]">
-            <p>© Lubanzi Technologies. All Rights Reserved. Professional CCTV Installations.</p>
-            <p className="uppercase tracking-widest text-zinc-700">Your Security • Our Priority</p>
-          </div>
-
         </div>
       </footer>
 
     </div>
+  );
+}
+
+function ServiceCard({ icon, title, desc }: { icon: React.ReactNode, title: string, desc: string }) {
+  return (
+    <div className="p-10 glass-panel rounded-[2.5rem] space-y-6 hover:translate-y-[-8px] transition-all duration-500 hover:border-cyan-500/30 group">
+      <div className="w-14 h-14 rounded-2xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center group-hover:bg-cyan-500 group-hover:text-zinc-950 transition-colors duration-500">
+        {icon}
+      </div>
+      <h3 className="text-xl font-black text-white uppercase tracking-widest">{title}</h3>
+      <p className="text-zinc-500 text-sm font-medium leading-relaxed">{desc}</p>
+      <button className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-cyan-400 group-hover:text-white transition-colors">
+        Learn More <ChevronRight className="w-3 h-3" />
+      </button>
+    </div>
+  );
+}
+
+function TechFeature({ title, desc }: { title: string, desc: string }) {
+  return (
+    <div className="p-6 glass-panel rounded-2xl space-y-2 border-l-4 border-l-cyan-500">
+      <h4 className="text-xs font-black text-white uppercase tracking-widest">{title}</h4>
+      <p className="text-[11px] text-zinc-500 font-bold leading-relaxed">{desc}</p>
+    </div>
+  );
+}
+
+function ContactLink({ href, icon, label, value }: { href: string, icon: React.ReactNode, label: string, value: string }) {
+  return (
+    <a 
+      href={href}
+      className="flex items-center justify-between p-8 rounded-3xl bg-zinc-950/40 hover:bg-zinc-950/80 transition-all border-2 border-transparent hover:border-zinc-900 group"
+    >
+      <div className="flex items-center gap-6">
+        <div className="text-zinc-950">
+          {icon}
+        </div>
+        <div>
+          <p className="text-[10px] font-black uppercase tracking-widest opacity-40">{label}</p>
+          <p className="text-2xl font-black text-zinc-950 tracking-tighter">{value}</p>
+        </div>
+      </div>
+      <div className="w-12 h-12 rounded-full border border-zinc-900/20 flex items-center justify-center group-hover:bg-zinc-950 group-hover:text-cyan-400 transition-all">
+        <ExternalLink className="w-5 h-5" />
+      </div>
+    </a>
   );
 }

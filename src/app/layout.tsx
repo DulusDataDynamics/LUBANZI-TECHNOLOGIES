@@ -1,14 +1,14 @@
 
-import type {Metadata} from 'next';
+import type { Metadata } from 'next';
 import './globals.css';
 import { ThemeProvider } from '@/components/theme-provider';
 import { Toaster } from '@/components/ui/toaster';
-import { SidebarProvider } from '@/components/layout/sidebar-context';
 import { FirebaseClientProvider } from '@/firebase';
+import { LoadingScreen } from '@/components/ui/loading-screen';
 
 export const metadata: Metadata = {
-  title: "VEXA | AI Software Engineering Agent",
-  description: "Autonomous software engineering workspace for developers.",
+  title: "Lubanzi Technologies | Premium CCTV & Security Solutions",
+  description: "Security Today • Peace of Mind Tomorrow. Professional CCTV installations for home and business in South Africa.",
 };
 
 export default function RootLayout({
@@ -21,15 +21,14 @@ export default function RootLayout({
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
       </head>
-      <body className="font-body bg-[#09090b] text-zinc-100 antialiased selection:bg-primary/30">
+      <body className="font-sans bg-[#020617] text-zinc-100 antialiased selection:bg-cyan-500/30">
         <ThemeProvider attribute="class" defaultTheme="dark" forcedTheme="dark">
           <FirebaseClientProvider>
-            <SidebarProvider>
-              {children}
-              <Toaster />
-            </SidebarProvider>
+            <LoadingScreen />
+            {children}
+            <Toaster />
           </FirebaseClientProvider>
         </ThemeProvider>
       </body>
