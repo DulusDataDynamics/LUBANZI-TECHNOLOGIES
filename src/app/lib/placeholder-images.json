@@ -1,0 +1,22 @@
+{
+  "placeholderImages": [
+    {
+      "id": "hero-security",
+      "description": "Modern surveillance cameras overlooking a crisp high-tech building exterior",
+      "imageUrl": "https://picsum.photos/seed/lubanzihero/1200/800",
+      "imageHint": "cctv surveillance security"
+    },
+    {
+      "id": "residential-cctv",
+      "description": "Sleek smart home dome camera mounted under premium roofing",
+      "imageUrl": "https://picsum.photos/seed/lubanzihome/600/400",
+      "imageHint": "home security"
+    },
+    {
+      "id": "commercial-cctv",
+      "description": "High definition bullet cameras monitoring corporate warehouses and assets",
+      "imageUrl": "https://picsum.photos/seed/lubanzibiz/600/400",
+      "imageHint": "business office security"
+    }
+  ]
+}
