@@ -21,6 +21,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
+import imageGrid from '@/app/lib/placeholder-images.json';
 
 export default function LubanziTechnologiesHome() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -62,10 +63,11 @@ export default function LubanziTechnologiesHome() {
     </div>
   );
 
+  const heroImageSrc = imageGrid.placeholderImages.find(img => img.id === 'hero-lubanzi')?.imageUrl || 'https://cdn.yesss.co.uk/media/Blogs/CCTV%20is%20Still%20a%20Cornerstone%20of%20Security%20Solutions%20in%202025/shutterstock_2078664664.jpg';
+
   return (
     <div className="min-h-screen bg-[#020617] text-zinc-100 font-sans selection:bg-cyan-500/20 antialiased overflow-x-hidden">
       
-      {/* 1. NAVIGATION BAR */}
       <header className={cn(
         "fixed top-0 z-50 w-full transition-all duration-300",
         scrolled ? "h-16 bg-[#020617]/90 backdrop-blur-xl border-b border-zinc-800/80" : "h-20 bg-transparent"
@@ -74,7 +76,6 @@ export default function LubanziTechnologiesHome() {
           
           <Logo />
 
-          {/* Desktop Nav links */}
           <nav className="hidden lg:flex items-center gap-8 text-xs font-bold uppercase tracking-wider text-zinc-400">
             <button onClick={() => scrollToSection('home')} className="hover:text-cyan-400 transition-colors">Home</button>
             <button onClick={() => scrollToSection('services')} className="hover:text-cyan-400 transition-colors">Services</button>
@@ -92,7 +93,6 @@ export default function LubanziTechnologiesHome() {
             </Button>
           </div>
 
-          {/* Mobile hamburger icon */}
           <button 
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="lg:hidden p-2 rounded-xl border border-zinc-800 bg-zinc-900/50 text-zinc-400 hover:text-white transition-colors"
@@ -102,7 +102,6 @@ export default function LubanziTechnologiesHome() {
         </div>
       </header>
 
-      {/* Mobile drawer layout */}
       {mobileMenuOpen && (
         <div className="fixed inset-0 z-40 bg-[#020617]/98 backdrop-blur-xl lg:hidden transition-all animate-in fade-in duration-300">
           <div className="flex flex-col p-8 pt-24 space-y-6 text-xl font-black uppercase tracking-widest border-t border-zinc-800/60">
@@ -132,7 +131,6 @@ export default function LubanziTechnologiesHome() {
         </div>
       )}
 
-      {/* 2. HERO SECTION */}
       <section id="home" className="relative min-h-[90vh] flex items-center tech-grid pt-24 lg:pt-0 border-b border-zinc-900/50">
         <div className="absolute inset-0 hero-glow pointer-events-none" />
         
@@ -173,16 +171,16 @@ export default function LubanziTechnologiesHome() {
             </div>
 
             <div className="lg:col-span-6 relative group">
-              <div className="relative aspect-[4/5] sm:aspect-square lg:aspect-[4/5] rounded-3xl overflow-hidden border border-zinc-800 shadow-2xl">
+              <div className="relative aspect-[4/3] sm:aspect-video lg:aspect-[4/3] rounded-3xl overflow-hidden border border-zinc-800 shadow-2xl">
                 <Image 
-                  src="https://picsum.photos/seed/lubanzi-secure-1/800/1000" 
+                  src={heroImageSrc}
                   alt="Lubanzi CCTV Systems"
                   fill
                   priority
                   className="object-cover transition-transform duration-700 group-hover:scale-105"
                   data-ai-hint="security surveillance"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#020617] via-[#020617]/10 to-transparent opacity-80" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#020617] via-[#020617]/10 to-transparent opacity-60" />
               </div>
             </div>
 
@@ -190,7 +188,6 @@ export default function LubanziTechnologiesHome() {
         </div>
       </section>
 
-      {/* 3. SERVICES SECTION */}
       <section id="services" className="py-24 bg-zinc-950/20 relative">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           
@@ -231,7 +228,6 @@ export default function LubanziTechnologiesHome() {
         </div>
       </section>
 
-      {/* 4. WHY CHOOSE US */}
       <section className="py-24 border-y border-zinc-900 bg-zinc-900/10">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
@@ -259,7 +255,6 @@ export default function LubanziTechnologiesHome() {
         </div>
       </section>
 
-      {/* 5. CCTV SOLUTIONS SECTION */}
       <section id="solutions" className="py-24 relative overflow-hidden">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mx-auto text-center space-y-6 mb-16">
@@ -286,7 +281,6 @@ export default function LubanziTechnologiesHome() {
         </div>
       </section>
 
-      {/* 6. ABOUT SECTION */}
       <section id="about" className="py-24 bg-zinc-950/40 border-t border-zinc-900">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl text-center space-y-8">
           <Badge className="bg-cyan-500/10 text-cyan-400 border-cyan-500/20 font-black tracking-widest text-[10px]">ABOUT OUR COMPANY</Badge>
@@ -300,7 +294,6 @@ export default function LubanziTechnologiesHome() {
         </div>
       </section>
 
-      {/* 7. PROCESS SECTION */}
       <section className="py-24 bg-zinc-900/20">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center space-y-4 mb-16">
@@ -326,7 +319,6 @@ export default function LubanziTechnologiesHome() {
         </div>
       </section>
 
-      {/* 8. CONTACT CHANNELS */}
       <section id="contact" className="py-24 bg-zinc-950 border-t border-zinc-900">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl">
           
@@ -360,7 +352,6 @@ export default function LubanziTechnologiesHome() {
         </div>
       </section>
 
-      {/* 9. FOOTER */}
       <footer className="bg-[#010410] pt-16 pb-12 border-t border-zinc-900">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-12 mb-12">
@@ -418,7 +409,6 @@ function ServiceCard({ icon, title, desc }: { icon: React.ReactNode, title: stri
   );
 }
 
-// Minimalistic sidebar or lead card layout
 function TechFeature({ title, desc }: { title: string, desc: string }) {
   return (
     <div className="p-5 bg-zinc-900/40 border border-zinc-800/60 rounded-xl space-y-1">
